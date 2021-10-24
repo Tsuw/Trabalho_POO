@@ -1,68 +1,24 @@
 package com.jogos.api.model;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "DLC")
-public class DLCEntity {
+public class NeutralGame {
 
-    @Id
-    @Column(name = "ID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "ownedGame", nullable = false)
-    private String ownedGame;
-
-    @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "releaseDate", nullable = false)
     private Date releaseDate;
-
-    @Column(name = "description", nullable = false)
     private String description;
-
-    @Column(name = "developer", nullable = false)
     private String developer;
-
-    @Column(name = "peopleInvolved", nullable = false)
     private int peopleInvolved;
-
-    @Column(name = "soldCopies", nullable = false)
     private int soldCopies;
-
-    @Column(name = "distributor", nullable = false)
     private String distributor;
-
-    @Column(name = "score", nullable = false)
     private int score;
-
-    @Column(name = "price", nullable = false, scale = 2)
     private Double price;
-
-    @Column(name = "genre", nullable = false)
     private String genre;
-
-    @Column(name = "rating", nullable = false)
     private int rating;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getOwnedGame() {
-        return ownedGame;
-    }
-
-    public void setOwnedGame(String ownedGame) {
-        this.ownedGame = ownedGame;
-    }
+    private boolean hasDLC;
+    private String platform;
+    private GameRequirements minimumRequirements;
+    private GameRequirements recommendedRequirements;
 
     public String getName() {
         return name;
@@ -150,5 +106,37 @@ public class DLCEntity {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public boolean isHasDLC() {
+        return hasDLC;
+    }
+
+    public void setHasDLC(boolean hasDLC) {
+        this.hasDLC = hasDLC;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public GameRequirements getMinimumRequirements() {
+        return minimumRequirements;
+    }
+
+    public void setMinimumRequirements(GameRequirements minimumRequirements) {
+        this.minimumRequirements = minimumRequirements;
+    }
+
+    public GameRequirements getRecommendedRequirements() {
+        return recommendedRequirements;
+    }
+
+    public void setRecommendedRequirements(GameRequirements recommendedRequirements) {
+        this.recommendedRequirements = recommendedRequirements;
     }
 }

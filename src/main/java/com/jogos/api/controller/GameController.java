@@ -1,119 +1,123 @@
-    package com.jogos.api.controller;
+package com.jogos.api.controller;
 
-    import com.jogos.api.dto.GameDTO;
-    import com.jogos.api.model.GameEntity;
-    import com.jogos.api.repository.GameRepository;
-    import com.jogos.api.service.GameService;
-    import com.jogos.api.service.UserService;
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.web.bind.annotation.*;
-    import java.util.ArrayList;
-    import java.util.List;
+import com.jogos.api.dto.GamePCDTO;
+import com.jogos.api.model.GamePC;
+import com.jogos.api.model.NeutralGame;
+import com.jogos.api.repository.GamePCRepository;
+import com.jogos.api.service.GameService;
+import com.jogos.api.service.Separador;
+import com.jogos.api.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-    @RestController
-    public class GameController {
+import java.util.ArrayList;
+import java.util.List;
 
-        @Autowired
-        private GameService service;
+@RestController
+public class GameController {
 
-        @Autowired
-        private UserService userService;
+    @Autowired
+    private GameService service;
 
-        @Autowired
-        private GameRepository repo;
+    @Autowired
+    private UserService userService;
 
-        @GetMapping("/getGame")
-        public List<GameDTO> getGame(){
-            int retorno;
-            List<GameDTO> vazio = new ArrayList<>();
+    @Autowired
+    private GamePCRepository repo;
 
-            retorno = userService.loginConferer();
+    @Autowired
+    private Separador separador;
 
-            if(retorno == 1){
-                return vazio;
-            }
+    @GetMapping("/getGame")
+    public List<GamePCDTO> getGame() {
+        int retorno;
+        List<GamePCDTO> vazio = new ArrayList<>();
 
-            List<GameDTO> dtos= service.getGames();
+        retorno = userService.loginConferer();
 
-            return dtos;
+        if (retorno == 1) {
+            return vazio;
         }
 
-        @PostMapping("/postGame")
-        public String postGame(@RequestBody GameEntity game){ // exemplo de encapsulamento, método public
+        List<GamePCDTO> dtos = service.getGames();
 
-            int retorno;
+        return dtos;
+    }
 
-            retorno = userService.loginConferer();
+    @PostMapping("/postGame")
+    public String postGame(@RequestBody NeutralGame game) {
 
-            if(retorno == 0){
-                return "Esse usuário não tem permição para esse comando";
-            }
+        int retorno;
 
-            retorno = service.validation(game);
+        retorno = userService.loginConferer();
 
-            if(retorno == 1){
-                return "Não pode ter uma quantidade negativa de pessoas envolvidas";
-            }else if(retorno == 2){
-                return "Não pode ter número de cópias negativo";
-            }else if(retorno == 3){
-                return "A nota do jogo não pode ser negativa";
-            }else if(retorno ==4){
-                return "A nota do jogo não pode ser negativa";
-            }else if(retorno ==5){
-                return "A classificação indicativa não pode ser negativa e nem maior do que 21 anos";
-            }else if(retorno ==6){
-                return "O genero do jogo não pode estar vazio";
-            }else if(retorno ==7){
-                return "O jogo não pode ficar sem um developer";
-            } else if (retorno ==8){
-                return "O jogo não pode não ter um nome";
-            }
-
-            repo.save(game);
-
-            return "Jogo adicionado com sucesso";
-
+        if (retorno == 0) {
+            return "Esse usuário não tem permição para esse comando";
         }
 
-        @DeleteMapping("/deleteGame/{id}")
-        public String deleteGame(@PathVariable Long id){
+        retorno = separador.postSeparator(game);
 
-            int retorno;
-
-            retorno = userService.loginConferer();
-
-            if(retorno == 0){
-                return "Esse usuário não tem permição para esse comando";
-            }
-
-            if(!service.IdExists(id)){
-                return "Jogo não encontrado";
-            }
-
-            repo.deleteById(id);
-
-            return "Jogo deletado com sucesso";
+        if (retorno == 1) {
+            return "Não pode ter uma quantidade negativa de pessoas envolvidas";
+        } else if (retorno == 2) {
+            return "Não pode ter número de cópias negativo";
+        } else if (retorno == 3) {
+            return "A nota do jogo não pode ser negativa";
+        } else if (retorno == 4) {
+            return "A nota do jogo não pode ser negativa";
+        } else if (retorno == 5) {
+            return "A classificação indicativa não pode ser negativa e nem maior do que 21 anos";
+        } else if (retorno == 6) {
+            return "O genero do jogo não pode estar vazio";
+        } else if (retorno == 7) {
+            return "O jogo não pode ficar sem um developer";
+        } else if (retorno == 8) {
+            return "O jogo não pode não ter um nome";
         }
 
-        @PutMapping("/updateGame/{id}")
-        public String updateGame(@PathVariable Long id, @RequestBody GameEntity game){ //exemplo de encapsulamento
+        return "Jogo adicionado com sucesso";
 
-            int retorno;
+    }
 
-            retorno = userService.loginConferer();
+    @DeleteMapping("/deleteGame/{id}")
+    public String deleteGame(@PathVariable Long id) {
 
-            if(retorno == 0){
-                return "Esse usuário não tem permição para esse comando";
-            }
+        int retorno;
 
-            if(!service.IdExists(id)){
-                return "Jogo não encontrado";
-            }
+        retorno = userService.loginConferer();
 
-            service.update(id, game);
-
-            return "Os dados do jogo foram atualizados";
+        if (retorno == 0) {
+            return "Esse usuário não tem permição para esse comando";
         }
+
+        if (!service.IdExists(id)) {
+            return "Jogo não encontrado";
+        }
+
+        repo.deleteById(id);
+
+        return "Jogo deletado com sucesso";
+    }
+
+    @PutMapping("/updateGame/{id}")
+    public String updateGame(@PathVariable("id") Long id, @RequestBody GamePC game) { //exemplo de encapsulamento
+
+        int retorno;
+
+        retorno = userService.loginConferer();
+
+        if (retorno == 0) {
+            return "Esse usuário não tem permição para esse comando";
+        }
+
+        if (!service.IdExists(id)) {
+            return "Jogo não encontrado";
+        }
+
+        service.update(id, game);
+
+        return "Os dados do jogo foram atualizados";
+    }
 
         /*@DeleteMapping("/delete")
         public String deleteAll(){
@@ -121,5 +125,5 @@
 
             return "Apagou";
         }*/
-
-    }
+    //@PathVariable("ownedGame") String ownedGame, @PathVariable("id") Long id
+}

@@ -1,68 +1,18 @@
-package com.jogos.api.model;
+package com.jogos.api.dto;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "DLC")
-public class DLCEntity {
-
-    @Id
-    @Column(name = "ID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "ownedGame", nullable = false)
-    private String ownedGame;
-
-    @Column(name = "name", nullable = false)
+public class GameConsoleDTO {
     private String name;
-
-    @Column(name = "releaseDate", nullable = false)
     private Date releaseDate;
-
-    @Column(name = "description", nullable = false)
     private String description;
-
-    @Column(name = "developer", nullable = false)
     private String developer;
-
-    @Column(name = "peopleInvolved", nullable = false)
-    private int peopleInvolved;
-
-    @Column(name = "soldCopies", nullable = false)
-    private int soldCopies;
-
-    @Column(name = "distributor", nullable = false)
     private String distributor;
-
-    @Column(name = "score", nullable = false)
     private int score;
-
-    @Column(name = "price", nullable = false, scale = 2)
     private Double price;
-
-    @Column(name = "genre", nullable = false)
     private String genre;
-
-    @Column(name = "rating", nullable = false)
     private int rating;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getOwnedGame() {
-        return ownedGame;
-    }
-
-    public void setOwnedGame(String ownedGame) {
-        this.ownedGame = ownedGame;
-    }
+    private boolean hasDLC;
 
     public String getName() {
         return name;
@@ -94,22 +44,6 @@ public class DLCEntity {
 
     public void setDeveloper(String developer) {
         this.developer = developer;
-    }
-
-    public int getPeopleInvolved() {
-        return peopleInvolved;
-    }
-
-    public void setPeopleInvolved(int peopleInvolved) {
-        this.peopleInvolved = peopleInvolved;
-    }
-
-    public int getSoldCopies() {
-        return soldCopies;
-    }
-
-    public void setSoldCopies(int soldCopies) {
-        this.soldCopies = soldCopies;
     }
 
     public String getDistributor() {
@@ -150,5 +84,13 @@ public class DLCEntity {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public boolean isHasDLC() {
+        return hasDLC;
+    }
+
+    public void setHasDLC(boolean hasDLC) {
+        this.hasDLC = hasDLC;
     }
 }

@@ -2,9 +2,9 @@
 
     import com.jogos.api.dto.DLCDTO;
     import com.jogos.api.model.DLCEntity;
-    import com.jogos.api.model.GameEntity;
+    import com.jogos.api.model.GamePC;
     import com.jogos.api.repository.DLCRepository;
-    import com.jogos.api.repository.GameRepository;
+    import com.jogos.api.repository.GamePCRepository;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@
         private DLCRepository repo;
 
         @Autowired
-        private GameRepository grepo;
+        private GamePCRepository grepo;
 
         public List<DLCDTO> getDLC(String ownedGameName){
 
@@ -52,7 +52,7 @@
 
         public int NameConferer(String ownedGame){
 
-            Optional<GameEntity> Enty = grepo.findByName(ownedGame);
+            Optional<GamePC> Enty = grepo.findByName(ownedGame);
 
             if(Enty.get().isHasDLC() == false){
                 return 1;

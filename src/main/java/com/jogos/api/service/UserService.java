@@ -134,24 +134,4 @@
             }
         }
 
-
-        /*public List<UserDTO> getUsers(String name) {
-            String filter = name != null ? name : "";
-            Optional<List<UserEntity>> result = userInterfaceRepo.findByNameContaining(filter);
-
-            List<UserDTO> lst = new ArrayList<>();
-
-            if (result.isPresent()) {
-                List<UserEntity> users = result.get();
-                for (UserEntity u : users) {
-                    UserDTO dto = new UserDTO(u.getId(), u.getName(), u.getEmail(), u.getPassword());
-                    lst.add(dto);
-                }
-            }
-
-            return lst;
-        }*/
-
-        //professor usou isso no fim da aula
-
     }
