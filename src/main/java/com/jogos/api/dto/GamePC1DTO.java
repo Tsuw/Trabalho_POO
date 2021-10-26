@@ -4,8 +4,9 @@ import com.jogos.api.model.Requirements;
 
 import java.util.Date;
 
-public class GamePCDTO {
+public class GamePC1DTO {
 
+    private Long id;
     private String name;
     private Date releaseDate;
     private String description;
@@ -16,8 +17,17 @@ public class GamePCDTO {
     private String genre;
     private int rating;
     private boolean hasDLC;
+    private String platform;
     private Requirements minimumRequirements;
     private Requirements recommendedRequirements;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -25,6 +35,14 @@ public class GamePCDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public String getDescription() {
@@ -51,6 +69,14 @@ public class GamePCDTO {
         this.distributor = distributor;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public Double getPrice() {
         return price;
     }
@@ -75,28 +101,20 @@ public class GamePCDTO {
         this.rating = rating;
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public boolean isHasDLC() {
         return hasDLC;
     }
 
     public void setHasDLC(boolean hasDLC) {
         this.hasDLC = hasDLC;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
     public Requirements getMinimumRequirements() {

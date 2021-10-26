@@ -1,6 +1,6 @@
 package com.jogos.api.dto;
 
-import com.jogos.api.model.GameRequirements;
+import com.jogos.api.model.Requirements;
 
 import java.util.Date;
 
@@ -15,8 +15,8 @@ public class GameVRDTO {
     private String genre;
     private int rating;
     private boolean hasDLC;
-    private GameRequirements minimumRequirements;
-    private GameRequirements recommendedRequirements;
+    private Requirements minimumRequirements;
+    private Requirements recommendedRequirements;
 
     public String getName() {
         return name;
@@ -98,19 +98,19 @@ public class GameVRDTO {
         this.hasDLC = hasDLC;
     }
 
-    public GameRequirements getMinimumRequirements() {
+    public Requirements getMinimumRequirements() {
         return minimumRequirements;
     }
 
-    public void setMinimumRequirements(GameRequirements minimumRequirements) {
+    public void setMinimumRequirements(Requirements minimumRequirements) {
         this.minimumRequirements = minimumRequirements;
     }
 
-    public GameRequirements getRecommendedRequirements() {
+    public Requirements getRecommendedRequirements() {
         return recommendedRequirements;
     }
 
-    public void setRecommendedRequirements(GameRequirements recommendedRequirements) {
+    public void setRecommendedRequirements(Requirements recommendedRequirements) {
         this.recommendedRequirements = recommendedRequirements;
     }
 }

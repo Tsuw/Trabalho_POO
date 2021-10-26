@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "requirements")
-public class GameRequirements {
+public class Requirements {
 
     @Id
     @Column(name = "id", nullable = false)

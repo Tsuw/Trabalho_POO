@@ -1,8 +1,12 @@
 package com.jogos.api.service;
 
+import com.jogos.api.dto.GamePC1DTO;
 import com.jogos.api.dto.GamePCDTO;
+import com.jogos.api.model.GameConsole1;
 import com.jogos.api.model.GamePC;
-import com.jogos.api.model.GameVR;
+import com.jogos.api.model.GamePC1;
+import com.jogos.api.model.GameVR1;
+import com.jogos.api.repository.GamePC1Repository;
 import com.jogos.api.repository.GamePCRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +22,21 @@ public class GameService {
     @Autowired
     private GamePCRepository repo;
 
-    public List<GamePCDTO> getGames() {
-        List<GamePCDTO> ListGames = new ArrayList<>();
+    @Autowired
+    private GamePC1Repository repositoryPC;
 
-        List<GamePC> games = repo.findAll();
+    public List<GamePC1DTO> getGamesPC(){
+        List<GamePC1DTO> ListGames = new ArrayList<>();
 
-        for (int i = 0; i < games.size(); i++) {
-            GamePC tmp = games.get(i);
+        List<GamePC1> games = repositoryPC.findAll();
 
-            GamePCDTO dto = new GamePCDTO();
+        for(int i = 0; i < games.size();i++){
+
+            GamePC1 tmp = games.get(i);
+
+            GamePC1DTO dto = new GamePC1DTO();
+
+            dto.setId(tmp.getId());
             dto.setName(tmp.getName());
             dto.setReleaseDate(tmp.getReleaseDate());
             dto.setDescription(tmp.getDescription());
@@ -37,14 +47,17 @@ public class GameService {
             dto.setGenre(tmp.getGenre());
             dto.setRating(tmp.getRating());
             dto.setHasDLC(tmp.isHasDLC());
+            dto.setMinimumRequirements(tmp.getMinimumRequirements());
+            dto.setRecommendedRequirements(tmp.getRecommendedRequirements());
 
             ListGames.add(dto);
+
         }
 
         return ListGames;
     }
 
-    public int validationPC(GamePC Enty) {
+    public int validationPC(GamePC1 Enty) {
 
         if (Enty.getPeopleInvolved() < 1) {
             return 1;
@@ -81,7 +94,7 @@ public class GameService {
         return 0;
     }
 
-    public int validationVR(GameVR Enti) { // exemplo de encapsulamento
+    public int validationVR(GameVR1 Enti) { // exemplo de encapsulamento
 
         if (Enti.getPeopleInvolved() < 1) {
             return 1;
@@ -118,34 +131,79 @@ public class GameService {
         return 0;
     }
 
+    public int validationConsole(GameConsole1 gameConsole1) { // exemplo de encapsulamento
+
+        if (gameConsole1.getPeopleInvolved() < 1) {
+            return 1;
+        }
+
+        if (gameConsole1.getSoldCopies() < 0) {
+            return 2;
+        }
+
+        if (gameConsole1.getScore() < 0 || gameConsole1.getScore() > 100) {
+            return 3;
+        }
+
+        if (gameConsole1.getPrice() <= 0) {
+            return 4;
+        }
+
+        if (gameConsole1.getRating() < 0 && gameConsole1.getRating() > 21) {//
+            return 5;
+        }
+
+        if (gameConsole1.getGenre().isEmpty()) {
+            return 6;
+        }
+
+        if (gameConsole1.getDeveloper().isEmpty()) {
+            return 7;
+        }
+
+        if (gameConsole1.getName().isEmpty()) {
+            return 8;
+        }
+
+        return 0;
+    }
+
     public Boolean IdExists(Long ID) {
 
         return repo.existsById(ID);
 
     }
 
-    public void update(Long id, GamePC Entity) {
+    public Boolean IdPCExists(Long ID){
 
-        Optional<GamePC> enty = repo.findById(id);
+        return repositoryPC.existsById(ID);
+    }
 
-        if (enty.isPresent()) {
+    public void updateGamePC(Long id, GamePC1 entity){
 
-            GamePC enty_update = enty.get();
+        Optional<GamePC1> enty = repositoryPC.findById(id);
 
-            enty_update.setName(Entity.getName());
-            enty_update.setReleaseDate(Entity.getReleaseDate());
-            enty_update.setDescription(Entity.getDescription());
-            enty_update.setDeveloper(Entity.getDeveloper());
-            enty_update.setPeopleInvolved(Entity.getPeopleInvolved());
-            enty_update.setSoldCopies(Entity.getSoldCopies());
-            enty_update.setDistributor(Entity.getDistributor());
-            enty_update.setScore(Entity.getScore());
-            enty_update.setPrice(Entity.getPrice());
-            enty_update.setGenre(Entity.getGenre());
-            enty_update.setRating(Entity.getRating());
-            enty_update.setHasDLC(Entity.isHasDLC());
+        if(enty.isPresent()){
 
-            repo.save(enty_update);
+            GamePC1 entyUpdate = enty.get();
+
+            entyUpdate.setName(entity.getName());
+            entyUpdate.setReleaseDate(entity.getReleaseDate());
+            entyUpdate.setDescription(entity.getDescription());
+            entyUpdate.setDeveloper(entity.getDeveloper());
+            entyUpdate.setPeopleInvolved(entity.getPeopleInvolved());
+            entyUpdate.setSoldCopies(entity.getSoldCopies());
+            entyUpdate.setDistributor(entity.getDistributor());
+            entyUpdate.setScore(entity.getScore());
+            entyUpdate.setPrice(entyUpdate.getPrice());
+            entyUpdate.setGenre(entity.getGenre());
+            entyUpdate.setRating(entity.getRating());
+            entyUpdate.setHasDLC(entyUpdate.isHasDLC());
+            entyUpdate.setPlatform(entity.getPlatform());
+            entyUpdate.setMinimumRequirements(entity.getMinimumRequirements());
+            entyUpdate.setRecommendedRequirements(entity.getRecommendedRequirements());
+
+            repositoryPC.save(entyUpdate);
         }
 
     }

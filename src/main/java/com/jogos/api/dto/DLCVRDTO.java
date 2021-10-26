@@ -1,15 +1,17 @@
-package com.jogos.api.model;
+package com.jogos.api.dto;
+
+import com.jogos.api.model.Requirements;
 
 import java.util.Date;
 
-public class NeutralGame {
+public class DLCVRDTO {
 
+    private Long id;
+    private String ownedGame;
     private String name;
     private Date releaseDate;
     private String description;
     private String developer;
-    private int peopleInvolved;
-    private int soldCopies;
     private String distributor;
     private int score;
     private Double price;
@@ -17,8 +19,24 @@ public class NeutralGame {
     private int rating;
     private boolean hasDLC;
     private String platform;
-    private GameRequirements minimumRequirements;
-    private GameRequirements recommendedRequirements;
+    private Requirements minimumRequirements;
+    private Requirements recommendedRequirements;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getOwnedGame() {
+        return ownedGame;
+    }
+
+    public void setOwnedGame(String ownedGame) {
+        this.ownedGame = ownedGame;
+    }
 
     public String getName() {
         return name;
@@ -50,22 +68,6 @@ public class NeutralGame {
 
     public void setDeveloper(String developer) {
         this.developer = developer;
-    }
-
-    public int getPeopleInvolved() {
-        return peopleInvolved;
-    }
-
-    public void setPeopleInvolved(int peopleInvolved) {
-        this.peopleInvolved = peopleInvolved;
-    }
-
-    public int getSoldCopies() {
-        return soldCopies;
-    }
-
-    public void setSoldCopies(int soldCopies) {
-        this.soldCopies = soldCopies;
     }
 
     public String getDistributor() {
@@ -124,19 +126,19 @@ public class NeutralGame {
         this.platform = platform;
     }
 
-    public GameRequirements getMinimumRequirements() {
+    public Requirements getMinimumRequirements() {
         return minimumRequirements;
     }
 
-    public void setMinimumRequirements(GameRequirements minimumRequirements) {
+    public void setMinimumRequirements(Requirements minimumRequirements) {
         this.minimumRequirements = minimumRequirements;
     }
 
-    public GameRequirements getRecommendedRequirements() {
+    public Requirements getRecommendedRequirements() {
         return recommendedRequirements;
     }
 
-    public void setRecommendedRequirements(GameRequirements recommendedRequirements) {
+    public void setRecommendedRequirements(Requirements recommendedRequirements) {
         this.recommendedRequirements = recommendedRequirements;
     }
 }

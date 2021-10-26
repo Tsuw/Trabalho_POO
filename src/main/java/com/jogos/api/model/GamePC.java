@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "GamesPC")
-public class GamePC extends NeutralGame{
+public class GamePC{
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -53,17 +53,17 @@ public class GamePC extends NeutralGame{
 
     @OneToOne
     @JoinColumn(name = "minimumRequirements", nullable = false, referencedColumnName = "id")
-    private GameRequirements minimumRequirements;
+    private Requirements minimumRequirements;
 
     @OneToOne
     @JoinColumn(name = "recommendedRequirements", nullable = false, referencedColumnName = "id")
-    private GameRequirements recommendedRequirements;
+    private Requirements recommendedRequirements;
 
     public GamePC() {
 
     }
 
-    public GamePC(String name, Date releaseDate, String description, String developer, int peopleInvolved, int soldCopies, String distributor, int score, Double price, String genre, int rating, boolean hasDLC, GameRequirements minimumRequirements, GameRequirements recommendedRequirements) {
+    public GamePC(String name, Date releaseDate, String description, String developer, int peopleInvolved, int soldCopies, String distributor, int score, Double price, String genre, int rating, boolean hasDLC, Requirements minimumRequirements, Requirements recommendedRequirements) {
         this.name = name;
         this.releaseDate = releaseDate;
         this.description = description;

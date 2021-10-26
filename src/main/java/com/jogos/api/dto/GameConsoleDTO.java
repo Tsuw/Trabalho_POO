@@ -13,6 +13,7 @@ public class GameConsoleDTO {
     private String genre;
     private int rating;
     private boolean hasDLC;
+    private String storage;
 
     public String getName() {
         return name;
@@ -92,5 +93,13 @@ public class GameConsoleDTO {
 
     public void setHasDLC(boolean hasDLC) {
         this.hasDLC = hasDLC;
+    }
+
+    public String getStorage() {
+        return storage;
+    }
+
+    public void setStorage(String storage) {
+        this.storage = storage;
     }
 }

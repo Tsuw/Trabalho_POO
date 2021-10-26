@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "GameVR")
-public class GameVR extends NeutralGame{
+public class GameVR{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,11 +53,11 @@ public class GameVR extends NeutralGame{
 
     @OneToOne
     @JoinColumn(name = "minimumRequirements", nullable = false, referencedColumnName = "id")
-    private GameRequirements minimumRequirements;
+    private Requirements minimumRequirements;
 
     @OneToOne
     @JoinColumn(name = "recommendedRequirements", nullable = false, referencedColumnName = "id")
-    private GameRequirements recommendedRequirements;
+    private Requirements recommendedRequirements;
 
     public Long getId() {
         return id;

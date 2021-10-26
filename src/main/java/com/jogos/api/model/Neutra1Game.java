@@ -1,22 +1,53 @@
-package com.jogos.api.dto;
+package com.jogos.api.model;
 
+import javax.persistence.*;
 import java.util.Date;
 
-public class DLCDTO {
+@MappedSuperclass
+public abstract class Neutra1Game {
+    @Id
+    @Column(name = "ID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
 
-    private Long id;
-    private String ownedGame;
-    private String name;
-    private Date releaseDate;
-    private String description;
-    private String developer;
-    private int peopleInvolved;
-    private int soldCopies;
-    private String distributor;
-    private int score;
-    private Double price;
-    private String genre;
-    private int rating;
+    @Column(name = "name", nullable = false)
+    protected String name;
+
+    @Column(name = "releaseDate", nullable = false)
+    protected Date releaseDate;
+
+    @Column(name = "description", nullable = false)
+    protected String description;
+
+    @Column(name = "developer", nullable = false)
+    protected String developer;
+
+    @Column(name = "peopleInvolved", nullable = false)
+    protected int peopleInvolved;
+
+    @Column(name = "soldCopies", nullable = false)
+    protected int soldCopies;
+
+    @Column(name = "distributor", nullable = false)
+    protected String distributor;
+
+    @Column(name = "score", nullable = false)
+    protected int score;
+
+    @Column(name = "price", nullable = false, scale = 2)
+    protected Double price;
+
+    @Column(name = "genre", nullable = false)
+    protected String genre;
+
+    @Column(name = "rating", nullable = false)
+    protected int rating;
+
+    @Column(name = "hasDLC")
+    protected boolean hasDLC;
+
+    @Column(name = "platform")
+    protected String platform;
 
     public Long getId() {
         return id;
@@ -24,14 +55,6 @@ public class DLCDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getOwnedGame() {
-        return ownedGame;
-    }
-
-    public void setOwnedGame(String ownedGame) {
-        this.ownedGame = ownedGame;
     }
 
     public String getName() {
@@ -120,5 +143,21 @@ public class DLCDTO {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public boolean isHasDLC() {
+        return hasDLC;
+    }
+
+    public void setHasDLC(boolean hasDLC) {
+        this.hasDLC = hasDLC;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 }
