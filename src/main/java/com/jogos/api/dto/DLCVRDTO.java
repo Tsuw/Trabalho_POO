@@ -17,7 +17,6 @@ public class DLCVRDTO {
     private Double price;
     private String genre;
     private int rating;
-    private boolean hasDLC;
     private String platform;
     private Requirements minimumRequirements;
     private Requirements recommendedRequirements;
@@ -108,14 +107,6 @@ public class DLCVRDTO {
 
     public void setRating(int rating) {
         this.rating = rating;
-    }
-
-    public boolean isHasDLC() {
-        return hasDLC;
-    }
-
-    public void setHasDLC(boolean hasDLC) {
-        this.hasDLC = hasDLC;
     }
 
     public String getPlatform() {

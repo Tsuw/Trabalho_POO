@@ -1,8 +1,12 @@
 package com.jogos.api.repository;
 
-import com.jogos.api.model.GameConsole1;
+import com.jogos.api.model.GameConsole;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GameConsole1Repository extends JpaRepository<GameConsole1, Long>{
+import java.util.Optional;
+
+public interface GameConsole1Repository extends JpaRepository<GameConsole, Long>{
+
+    Optional<GameConsole> findByName(String name);
 
 }

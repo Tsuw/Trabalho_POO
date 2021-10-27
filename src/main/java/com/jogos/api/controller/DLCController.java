@@ -1,6 +1,6 @@
 package com.jogos.api.controller;
 
-import com.jogos.api.dto.DLCDTO;
+import com.jogos.api.dto.DLCPCDTO;
 import com.jogos.api.model.DLCEntity;
 import com.jogos.api.repository.DLCRepository;
 import com.jogos.api.service.DLCService;
@@ -23,25 +23,25 @@ public class DLCController {
     @Autowired
     private DLCRepository repo;
 
-    @GetMapping("/getDLC/{ownedGame}")
-    public List<DLCDTO> getDLCbyName(@PathVariable String ownedGame) {
+    @GetMapping("/getDLC/{platform}/{ownedGame}")
+    public List<DLCPCDTO> getDLCPCbyName(@PathVariable("ownedGame") String ownedGame, @PathVariable("platform") String platform){
 
         int retorno;
-        List<DLCDTO> vazio = new ArrayList<>();
+        List<DLCPCDTO> vazio = new ArrayList<>();
 
         retorno = uservice.loginConferer();
 
-        if (retorno == 1) {
+        if(retorno == 1){
             return vazio;
         }
 
-        retorno = service.NameConferer(ownedGame);
+        retorno = service.NameConferer(ownedGame, platform);
 
-        if (retorno == 1) {
+        if(retorno == 1){
             return vazio;
         }
 
-        return service.getDLC(ownedGame);
+        return service.getDLCPC(ownedGame);
     }
 
     @PostMapping("/postDLC")

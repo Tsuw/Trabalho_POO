@@ -1,13 +1,14 @@
 package com.jogos.api.service;
 
+import com.jogos.api.dto.GameConsoleDTO;
 import com.jogos.api.dto.GamePC1DTO;
-import com.jogos.api.dto.GamePCDTO;
-import com.jogos.api.model.GameConsole1;
+import com.jogos.api.dto.GameVRDTO;
+import com.jogos.api.model.GameConsole;
 import com.jogos.api.model.GamePC;
-import com.jogos.api.model.GamePC1;
-import com.jogos.api.model.GameVR1;
-import com.jogos.api.repository.GamePC1Repository;
+import com.jogos.api.model.GameVR;
+import com.jogos.api.repository.GameConsole1Repository;
 import com.jogos.api.repository.GamePCRepository;
+import com.jogos.api.repository.GameVRRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,23 +21,25 @@ import java.util.Optional;
 public class GameService {
 
     @Autowired
-    private GamePCRepository repo;
+    private GamePCRepository repositoryPC;
 
     @Autowired
-    private GamePC1Repository repositoryPC;
+    private GameVRRepository repositoryVR;
+
+    @Autowired
+    private GameConsole1Repository repositoryConsole;
 
     public List<GamePC1DTO> getGamesPC(){
-        List<GamePC1DTO> ListGames = new ArrayList<>();
+        List<GamePC1DTO> listGames = new ArrayList<>();
 
-        List<GamePC1> games = repositoryPC.findAll();
+        List<GamePC> games = repositoryPC.findAll();
 
         for(int i = 0; i < games.size();i++){
 
-            GamePC1 tmp = games.get(i);
+            GamePC tmp = games.get(i);
 
             GamePC1DTO dto = new GamePC1DTO();
 
-            dto.setId(tmp.getId());
             dto.setName(tmp.getName());
             dto.setReleaseDate(tmp.getReleaseDate());
             dto.setDescription(tmp.getDescription());
@@ -49,15 +52,76 @@ public class GameService {
             dto.setHasDLC(tmp.isHasDLC());
             dto.setMinimumRequirements(tmp.getMinimumRequirements());
             dto.setRecommendedRequirements(tmp.getRecommendedRequirements());
+            dto.setPlatform(tmp.getPlatform());
 
-            ListGames.add(dto);
+            listGames.add(dto);
 
         }
 
-        return ListGames;
+        return listGames;
     }
 
-    public int validationPC(GamePC1 Enty) {
+    public List<GameVRDTO> getGamesVR(){
+
+        List<GameVRDTO> listGame = new ArrayList<>();
+        List<GameVR> games = repositoryVR.findAll();
+
+        for(int i = 0; i < games.size(); i++){
+
+            GameVR tmp = games.get(i);
+            GameVRDTO dto = new GameVRDTO();
+
+            dto.setName(tmp.getName());
+            dto.setReleaseDate(tmp.getReleaseDate());
+            dto.setDescription(tmp.getDescription());
+            dto.setDeveloper(tmp.getDeveloper());
+            dto.setDistributor(tmp.getDistributor());
+            dto.setScore(tmp.getScore());
+            dto.setPrice(tmp.getPrice());
+            dto.setGenre(tmp.getGenre());
+            dto.setRating(tmp.getRating());
+            dto.setHasDLC(tmp.isHasDLC());
+            dto.setPlatform(tmp.getPlatform());
+            dto.setMinimumRequirements(tmp.getMinimumRequirements());
+            dto.setRecommendedRequirements(tmp.getRecommendedRequirements());
+
+            listGame.add(dto);
+        }
+
+        return listGame;
+    }
+
+    public List<GameConsoleDTO> getGamesConsole(){
+        List<GameConsoleDTO> listGames = new ArrayList<>();
+        List<GameConsole> games = repositoryConsole.findAll();
+
+        for(int i = 0; i < games.size(); i++){
+
+            GameConsole tmp = games.get(i);
+            GameConsoleDTO dto = new GameConsoleDTO();
+
+            dto.setName(tmp.getName());
+            dto.setReleaseDate(tmp.getReleaseDate());
+            dto.setDescription(tmp.getDescription());
+            dto.setDeveloper(tmp.getDeveloper());
+            dto.setDistributor(tmp.getDistributor());
+            dto.setScore(tmp.getScore());
+            dto.setPrice(tmp.getPrice());
+            dto.setGenre(tmp.getGenre());
+            dto.setRating(tmp.getRating());
+            dto.setHasDLC(tmp.isHasDLC());
+            dto.setPlatform(tmp.getPlatform());
+            dto.setStorage(tmp.getStorage());
+
+            listGames.add(dto);
+        }
+
+        return listGames;
+    }
+
+
+
+    public int validationPC(GamePC Enty) {
 
         if (Enty.getPeopleInvolved() < 1) {
             return 1;
@@ -94,7 +158,7 @@ public class GameService {
         return 0;
     }
 
-    public int validationVR(GameVR1 Enti) { // exemplo de encapsulamento
+    public int validationVR(GameVR Enti) {
 
         if (Enti.getPeopleInvolved() < 1) {
             return 1;
@@ -131,7 +195,7 @@ public class GameService {
         return 0;
     }
 
-    public int validationConsole(GameConsole1 gameConsole1) { // exemplo de encapsulamento
+    public int validationConsole(GameConsole gameConsole1) {
 
         if (gameConsole1.getPeopleInvolved() < 1) {
             return 1;
@@ -168,24 +232,28 @@ public class GameService {
         return 0;
     }
 
-    public Boolean IdExists(Long ID) {
+    public Boolean IdPCExists(Long id){
 
-        return repo.existsById(ID);
-
+        return repositoryPC.existsById(id);
     }
 
-    public Boolean IdPCExists(Long ID){
+    public Boolean IdVRExists(Long id){
 
-        return repositoryPC.existsById(ID);
+        return repositoryVR.existsById(id);
     }
 
-    public void updateGamePC(Long id, GamePC1 entity){
+    public Boolean IdConsoleExists(Long id){
 
-        Optional<GamePC1> enty = repositoryPC.findById(id);
+        return repositoryConsole.existsById(id);
+    }
+
+    public void updateGamePC(Long id, GamePC entity){
+
+        Optional<GamePC> enty = repositoryPC.findById(id);
 
         if(enty.isPresent()){
 
-            GamePC1 entyUpdate = enty.get();
+            GamePC entyUpdate = enty.get();
 
             entyUpdate.setName(entity.getName());
             entyUpdate.setReleaseDate(entity.getReleaseDate());
@@ -206,6 +274,62 @@ public class GameService {
             repositoryPC.save(entyUpdate);
         }
 
+    }
+
+    public void updateGameVR(Long id, GameVR entity){
+
+        Optional<GameVR> enty = repositoryVR.findById(id);
+
+        if(enty.isPresent()){
+
+            GameVR entyUpdate = enty.get();
+
+            entyUpdate.setName(entity.getName());
+            entyUpdate.setReleaseDate(entity.getReleaseDate());
+            entyUpdate.setDescription(entity.getDescription());
+            entyUpdate.setDeveloper(entity.getDeveloper());
+            entyUpdate.setPeopleInvolved(entity.getPeopleInvolved());
+            entyUpdate.setSoldCopies(entity.getSoldCopies());
+            entyUpdate.setDistributor(entity.getDistributor());
+            entyUpdate.setScore(entity.getScore());
+            entyUpdate.setPrice(entyUpdate.getPrice());
+            entyUpdate.setGenre(entity.getGenre());
+            entyUpdate.setRating(entity.getRating());
+            entyUpdate.setHasDLC(entyUpdate.isHasDLC());
+            entyUpdate.setPlatform(entity.getPlatform());
+            entyUpdate.setMinimumRequirements(entity.getMinimumRequirements());
+            entyUpdate.setRecommendedRequirements(entity.getRecommendedRequirements());
+
+            repositoryVR.save(entyUpdate);
+        }
+
+    }
+
+    public void updateGameConsole(Long id, GameConsole entity){
+
+        Optional<GameConsole> enty = repositoryConsole.findById(id);
+
+        if(enty.isPresent()){
+
+            GameConsole entyUpdate = enty.get();
+
+            entyUpdate.setName(entity.getName());
+            entyUpdate.setReleaseDate(entity.getReleaseDate());
+            entyUpdate.setDescription(entity.getDescription());
+            entyUpdate.setDeveloper(entity.getDeveloper());
+            entyUpdate.setPeopleInvolved(entity.getPeopleInvolved());
+            entyUpdate.setSoldCopies(entity.getSoldCopies());
+            entyUpdate.setDistributor(entity.getDistributor());
+            entyUpdate.setScore(entity.getScore());
+            entyUpdate.setPrice(entyUpdate.getPrice());
+            entyUpdate.setGenre(entity.getGenre());
+            entyUpdate.setRating(entity.getRating());
+            entyUpdate.setHasDLC(entyUpdate.isHasDLC());
+            entyUpdate.setPlatform(entity.getPlatform());
+            entyUpdate.setStorage(entity.getStorage());
+
+            repositoryConsole.save(entyUpdate);
+        }
     }
 
 }

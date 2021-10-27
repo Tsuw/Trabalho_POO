@@ -15,6 +15,7 @@ public class GameVRDTO {
     private String genre;
     private int rating;
     private boolean hasDLC;
+    private String platform;
     private Requirements minimumRequirements;
     private Requirements recommendedRequirements;
 
@@ -112,5 +113,13 @@ public class GameVRDTO {
 
     public void setRecommendedRequirements(Requirements recommendedRequirements) {
         this.recommendedRequirements = recommendedRequirements;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 }

@@ -1,10 +1,9 @@
 package com.jogos.api.service;
 
 import com.jogos.api.dto.DLCDTO;
-import com.jogos.api.model.DLCEntity;
-import com.jogos.api.model.GamePC;
-import com.jogos.api.repository.DLCRepository;
-import com.jogos.api.repository.GamePCRepository;
+import com.jogos.api.dto.DLCPCDTO;
+import com.jogos.api.model.*;
+import com.jogos.api.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,18 @@ public class DLCService {
 
     @Autowired
     private GamePCRepository grepo;
+
+    @Autowired
+    private DLCPCRepository repositoryDPC;
+
+    @Autowired
+    private GamePCRepository repositoryPC;
+
+    @Autowired
+    private GameVRRepository repositoryVR;
+
+    @Autowired
+    private GameConsole1Repository repositoryConsole;
 
     public List<DLCDTO> getDLC(String ownedGameName) {
 
@@ -50,14 +61,58 @@ public class DLCService {
         return list;
     }
 
-    public int NameConferer(String ownedGame) {
+    public List<DLCPCDTO> getDLCPC(String ownedGameName){
 
-        Optional<GamePC> Enty = grepo.findByName(ownedGame);
+        List<DLCPCDTO> list = new ArrayList<>();
+        List<DLCPC> listDLC = repositoryDPC.findByOwnedGame(ownedGameName);
 
-        if (Enty.get().isHasDLC() == false) {
-            return 1;
-        } else {
-            return 0;
+        for(int i = 0; i < listDLC.size(); i++){
+
+            DLCPC enty = listDLC.get(i);
+            DLCPCDTO dto = new DLCPCDTO();
+
+            dto.setId(enty.getId());
+            dto.setOwnedGame(enty.getOwnedGame());
+            dto.setName(enty.getName());
+            dto.setReleaseDate(enty.getReleaseDate());
+            dto.setDescription(enty.getDescription());
+            dto.setDeveloper(enty.getDeveloper());
+            dto.setDistributor(enty.getDistributor());
+            dto.setScore(enty.getScore());
+            dto.setPrice(enty.getPrice());
+            dto.setGenre(enty.getGenre());
+            dto.setRating(enty.getRating());
+            dto.setPlatform(enty.getPlatform());
+            dto.setMinimumRequirements(enty.getMinimumRequirements());
+
+            list.add(dto);
+        }
+
+        return list;
+    }
+
+    public int NameConferer(String ownedGame, String platform){
+
+        if(platform.equals("PC") || platform.equals("pc")){
+            Optional<GamePC> gamePC = repositoryPC.findByName(ownedGame);
+
+            if(gamePC.get().isHasDLC() == false){
+                return 1;
+            } else return 0;
+
+        }else if(platform.equals("VR") || platform.equals("vr")){
+            Optional<GameVR> gameVR = repositoryVR.findByName(ownedGame);
+
+            if(gameVR.get().isHasDLC() == false){
+                return 1;
+            }else return 0;
+
+        }else{
+            Optional<GameConsole> gameConsole = repositoryConsole.findByName(ownedGame);
+
+            if(gameConsole.get().isHasDLC() == false){
+                return 1;
+            }else return 0;
         }
     }
 

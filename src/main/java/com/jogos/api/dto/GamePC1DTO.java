@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class GamePC1DTO {
 
-    private Long id;
     private String name;
     private Date releaseDate;
     private String description;
@@ -20,14 +19,6 @@ public class GamePC1DTO {
     private String platform;
     private Requirements minimumRequirements;
     private Requirements recommendedRequirements;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

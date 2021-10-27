@@ -1,15 +1,14 @@
 package com.jogos.api.controller;
 
+import com.jogos.api.dto.GameConsoleDTO;
 import com.jogos.api.dto.GamePC1DTO;
-import com.jogos.api.dto.GamePCDTO;
-import com.jogos.api.model.GameConsole1;
+import com.jogos.api.dto.GameVRDTO;
+import com.jogos.api.model.GameConsole;
 import com.jogos.api.model.GamePC;
-import com.jogos.api.model.GamePC1;
-import com.jogos.api.model.GameVR1;
+import com.jogos.api.model.GameVR;
 import com.jogos.api.repository.GameConsole1Repository;
-import com.jogos.api.repository.GamePC1Repository;
 import com.jogos.api.repository.GamePCRepository;
-import com.jogos.api.repository.GameVR1Repository;
+import com.jogos.api.repository.GameVRRepository;
 import com.jogos.api.service.GameService;
 import com.jogos.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +27,10 @@ public class GameController {
     private UserService userService;
 
     @Autowired
-    private GamePCRepository repo;
+    private GamePCRepository repositoryPC;
 
     @Autowired
-    private GamePC1Repository repositoryPC;
-
-    @Autowired
-    private GameVR1Repository repositoryVR;
+    private GameVRRepository repositoryVR;
 
     @Autowired
     private GameConsole1Repository repositoryConsole;
@@ -44,7 +40,7 @@ public class GameController {
 
         int retorno;
         List<GamePC1DTO> vazio = new ArrayList<>();
-        List<GamePC1DTO> ListGames = service.getGamesPC();
+        List<GamePC1DTO> listGames = service.getGamesPC();
 
         retorno = userService.loginConferer();
 
@@ -52,20 +48,52 @@ public class GameController {
             return vazio;
         }
 
-        return ListGames;
+        return listGames;
     }
 
+    @GetMapping("/getGames/VR")
+    public List<GameVRDTO> getGamesVR(){
 
+        int retorno;
+        List<GameVRDTO> vazio = new ArrayList<>();
+        List<GameVRDTO> listGames = service.getGamesVR();
+
+        retorno = userService.loginConferer();
+
+        if(retorno == 1){
+            return vazio;
+        }
+
+        return listGames;
+    }
+
+    @GetMapping("/getGames/Console")
+    public List<GameConsoleDTO> getGamesConsole(){
+
+        int retorno;
+        List<GameConsoleDTO> vazio = new ArrayList<>();
+        List<GameConsoleDTO> listGames = service.getGamesConsole();
+
+        retorno = userService.loginConferer();
+
+        if(retorno == 1){
+            return vazio;
+        }
+
+        return listGames;
+    }
 
     @PostMapping("/postGame/PC")
-    public String postGamePC(@RequestBody GamePC1 game) {
+    public String postGamePC(@RequestBody GamePC game) {
 
         int retorno;
 
         retorno = userService.loginConferer();
 
         if (retorno == 0) {
-            return "Esse usuário não tem permição para esse comando";
+            return "Esse usuário não tem permissão para esse comando";
+        }else if(retorno == 1){
+            return "Login necessário";
         }
 
         retorno = service.validationPC(game);
@@ -95,14 +123,16 @@ public class GameController {
     }
 
     @PostMapping("/postGame/VR")
-    public String postGameVR(@RequestBody GameVR1 game){
+    public String postGameVR(@RequestBody GameVR game){
 
         int retorno;
 
         retorno = userService.loginConferer();
 
         if(retorno == 0){
-            return "Esse usuario não tem permição para usar esse comando";
+            return "Esse usuario não tem permissão para usar esse comando";
+        }else if(retorno == 1){
+            return "Login necessário";
         }
 
         retorno = service.validationVR(game);
@@ -131,14 +161,16 @@ public class GameController {
     }
 
     @PostMapping("/postGame/Console")
-    public String postGameConsole(@RequestBody GameConsole1 game){
+    public String postGameConsole(@RequestBody GameConsole game){
 
         int retorno;
 
         retorno = userService.loginConferer();
 
         if(retorno == 0){
-            return "Esse usuario não tem permição para usar esse comando";
+            return "Esse usuario não tem permissão para usar esse comando";
+        }else if(retorno == 1){
+            return "Login necessário";
         }
 
         retorno = service.validationConsole(game);
@@ -166,35 +198,83 @@ public class GameController {
         return "Jogo adicionado com sucesso";
     }
 
-    @DeleteMapping("/deleteGame/{id}")
-    public String deleteGame(@PathVariable Long id) {
-
-        int retorno;
-
-        retorno = userService.loginConferer();
-
-        if (retorno == 0) {
-            return "Esse usuário não tem permição para esse comando";
-        }
-
-        if (!service.IdExists(id)) {
-            return "Jogo não encontrado";
-        }
-
-        repo.deleteById(id);
-
-        return "Jogo deletado com sucesso";
-    }
-
-    @PutMapping("/updateGame/PC/{id}")
-    public String updateGamePC(@PathVariable Long id, @RequestBody GamePC1 game){
+    @DeleteMapping("/deleteGame/PC/{id}")
+    public String deleteGamePC(@PathVariable Long id){
 
         int retorno;
 
         retorno = userService.loginConferer();
 
         if(retorno == 0){
-            return "Esse usuário não tem permição para esse comando";
+            return "Esse usuário não tem permissão para executar esse comando";
+        }else if(retorno == 1){
+            return "Login necessário";
+        }
+
+        if(!service.IdPCExists(id)){
+            return "Jogo não encontrado";
+        }
+
+        repositoryPC.deleteById(id);
+
+        return "Jogo deletado com sucesso";
+    }
+
+    @DeleteMapping("/deleteGame/VR/{id}")
+    public String deleteGameVR(@PathVariable Long id){
+
+        int retorno;
+
+        retorno = userService.loginConferer();
+
+        if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }else if(retorno == 1){
+            return "Login necessãrio";
+        }
+
+        if(!service.IdVRExists(id)){
+            return "Jogo não encontrado";
+        }
+
+        repositoryVR.deleteById(id);
+
+        return "Jogo deletado com sucesso";
+    }
+
+    @DeleteMapping("/deleteGame/Console/{id}")
+    public String deleteGameConsole(@PathVariable Long id){
+
+        int retorno;
+
+        retorno = userService.loginConferer();
+
+        if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }else if(retorno == 1){
+            return "Login necessãrio";
+        }
+
+        if(!service.IdConsoleExists(id)){
+            return "Jogo não encontrado";
+        }
+
+        repositoryConsole.deleteById(id);
+
+        return "Jogo deletado com sucesso";
+    }
+
+    @PutMapping("/updateGame/PC/{id}")
+    public String updateGamePC(@PathVariable Long id, @RequestBody GamePC game){
+
+        int retorno;
+
+        retorno = userService.loginConferer();
+
+        if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }else if(retorno == 1){
+            return "Login necessário";
         }
 
         if(!service.IdPCExists(id)){
@@ -202,6 +282,50 @@ public class GameController {
         }
 
         service.updateGamePC(id, game);
+
+        return "Os dados do jogo foram atualizados";
+    }
+
+    @PutMapping("/updateGame/VR/{id}")
+    public String updateGameVR(@PathVariable Long id, @RequestBody GameVR game){
+
+        int retorno;
+
+        retorno = userService.loginConferer();
+
+        if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }else if(retorno == 1){
+            return "Login necessário";
+        }
+
+        if(!service.IdVRExists(id)){
+            return "Jogo não encontrado";
+        }
+
+        service.updateGameVR(id, game);
+
+        return "Os dados do jogo foram atualizados";
+    }
+
+    @PutMapping("/updateGame/Console/{id}")
+    public String updateGameConsole(@PathVariable Long id, @RequestBody GameConsole game){
+
+        int retorno;
+
+        retorno = userService.loginConferer();
+
+        if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }else if(retorno == 1){
+            return "Login necessário";
+        }
+
+        if(!service.IdConsoleExists(id)){
+            return "Jogo não encontrado";
+        }
+
+        service.updateGameConsole(id, game);
 
         return "Os dados do jogo foram atualizados";
     }

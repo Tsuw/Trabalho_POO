@@ -1,69 +1,35 @@
 package com.jogos.api.model;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "GameVR")
-public class GameVR{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
-    private Long id;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "releaseDate", nullable = false)
-    private Date releaseDate;
-
-    @Column(name = "description", nullable = false)
-    private String description;
-
-    @Column(name = "developer", nullable = false)
-    private String developer;
-
-    @Column(name = "peopleInvolved", nullable = false)
-    private int peopleInvolved;
-
-    @Column(name = "soldCopies", nullable = false)
-    private int soldCopies;
-
-    @Column(name = "distributor", nullable = false)
-    private String distributor;
-
-    @Column(name = "score", nullable = false)
-    private int score;
-
-    @Column(name = "price", nullable = false, scale = 2)
-    private Double price;
-
-    @Column(name = "genre", nullable = false)
-    private String genre;
-
-    @Column(name = "rating", nullable = false)
-    private int rating;
-
-    @Column(name = "hasDLC", nullable = false)
-    private boolean hasDLC;
-
-    @Column(name = "platform", nullable = false)
-    private String platform;
+public class GameVR extends NeutralGame {
 
     @OneToOne
-    @JoinColumn(name = "minimumRequirements", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "minimumRequirements",  nullable = false, referencedColumnName = "id")
     private Requirements minimumRequirements;
 
     @OneToOne
-    @JoinColumn(name = "recommendedRequirements", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "recommendedRequirements",  nullable = false, referencedColumnName = "id")
     private Requirements recommendedRequirements;
 
-    public Long getId() {
-        return id;
+    public Requirements getMinimumRequirements() {
+        return minimumRequirements;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMinimumRequirements(Requirements minimumRequirements) {
+        this.minimumRequirements = minimumRequirements;
+    }
+
+    public Requirements getRecommendedRequirements() {
+        return recommendedRequirements;
+    }
+
+    public void setRecommendedRequirements(Requirements recommendedRequirements) {
+        this.recommendedRequirements = recommendedRequirements;
     }
 }

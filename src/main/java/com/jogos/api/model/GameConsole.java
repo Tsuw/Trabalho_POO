@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "GameConsole1")
-public class GameConsole1 extends Neutra1Game{
+@Table(name = "GameConsole")
+public class GameConsole extends NeutralGame {
 
     @Column(name = "storage", nullable = false)
     private String storage;
