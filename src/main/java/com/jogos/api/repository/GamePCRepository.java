@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface GamePCRepository extends JpaRepository<GamePC, Long> {
 
     Optional<GamePC> findByName(String name);
+    Boolean existsByName(String name);
 
 }

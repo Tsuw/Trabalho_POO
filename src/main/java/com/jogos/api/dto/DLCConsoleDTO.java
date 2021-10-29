@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class DLCConsoleDTO {
 
-    private Long id;
     private String ownedGame;
     private String name;
     private Date releaseDate;
@@ -17,14 +16,6 @@ public class DLCConsoleDTO {
     private int rating;
     private String platform;
     private String storage;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getOwnedGame() {
         return ownedGame;

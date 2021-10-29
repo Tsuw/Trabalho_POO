@@ -1,8 +1,12 @@
 package com.jogos.api.controller;
 
+import com.jogos.api.dto.DLCConsoleDTO;
 import com.jogos.api.dto.DLCPCDTO;
-import com.jogos.api.model.DLCEntity;
-import com.jogos.api.repository.DLCRepository;
+import com.jogos.api.dto.DLCVRDTO;
+import com.jogos.api.model.DLCConsole;
+import com.jogos.api.model.DLCPC;
+import com.jogos.api.model.DLCVR;
+import com.jogos.api.repository.*;
 import com.jogos.api.service.DLCService;
 import com.jogos.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +25,25 @@ public class DLCController {
     private DLCService service;
 
     @Autowired
-    private DLCRepository repo;
+    private DLCPCRepository repositoryDLCPC;
 
-    @GetMapping("/getDLC/{platform}/{ownedGame}")
-    public List<DLCPCDTO> getDLCPCbyName(@PathVariable("ownedGame") String ownedGame, @PathVariable("platform") String platform){
+    @Autowired
+    private DLCVRRepository repositoryDLCVR;
+
+    @Autowired
+    private DLCConsoleRepository repositoryDLCConsole;
+
+    @Autowired
+    private GamePCRepository repositoryPC;
+
+    @Autowired
+    private GameVRRepository repositoryVR;
+
+    @Autowired
+    private GameConsoleRepository repositoryConsole;
+
+    @GetMapping("/getDLC/PC/{ownedGame}")
+    public List<DLCPCDTO> getDLCPCbyName(@PathVariable("ownedGame") String ownedGame){
 
         int retorno;
         List<DLCPCDTO> vazio = new ArrayList<>();
@@ -35,72 +54,236 @@ public class DLCController {
             return vazio;
         }
 
-        retorno = service.NameConferer(ownedGame, platform);
-
-        if(retorno == 1){
+        if(!repositoryPC.existsByName(ownedGame)){
             return vazio;
         }
 
         return service.getDLCPC(ownedGame);
     }
 
-    @PostMapping("/postDLC")
-    public String postDLC(@RequestBody DLCEntity DLC) {
+    @GetMapping("/getDLC/VR/{ownedGame}")
+    public List<DLCVRDTO> getDLCVRbyName(@PathVariable("ownedGame") String ownedGame){
+
+        int retorno;
+        List<DLCVRDTO> vazio = new ArrayList<>();
+
+        retorno = uservice.loginConferer();
+
+        if(retorno == 1){
+            return vazio;
+        }
+
+        if(!repositoryVR.existsByName(ownedGame)){
+            return vazio;
+        }
+
+        return service.getDLCVR(ownedGame);
+
+    }
+
+    @GetMapping("/getDLC/Console/{ownedGame}")
+    public List<DLCConsoleDTO> getDLCConsolebyName(@PathVariable("ownedGame") String ownedGame){
+
+        int retorno;
+        List<DLCConsoleDTO> vazio = new ArrayList<>();
+
+        retorno = uservice.loginConferer();
+
+        if(retorno == 1){
+            return vazio;
+        }
+
+        if(!repositoryConsole.existsByName(ownedGame)){
+            return vazio;
+        }
+
+        return service.getDLCConsele(ownedGame);
+    }
+
+    @PostMapping("/postDLC/PC")
+    public String postDLCPC(@RequestBody DLCPC dlc){
 
         int retorno;
 
         retorno = uservice.loginConferer();
 
-        if (retorno == 1) {
-            return "Login não indentificado";
-        } else if (retorno == 0) {
-            return "Esse usuario não tem permição para esse comando";
+        if(retorno == 1){
+            return "Login não identificado";
+        }else if(retorno == 0){
+            return "Esse usuário não tem permissão para esse comando";
         }
 
-        repo.save(DLC);
+        repositoryDLCPC.save(dlc);
 
         return "DLC adicionado com sucesso";
     }
 
-    @PutMapping("/updateDLC/{id}")
-    public String updateDLC(@RequestBody DLCEntity DLC, @PathVariable Long id) {
+    @PostMapping("/postDLC/VR")
+    public String postDLCVR(@RequestBody DLCVR dlc){
 
         int retorno;
 
         retorno = uservice.loginConferer();
 
-        if (retorno == 1) {
-            return "Login não encontrado";
-        } else if (retorno == 0) {
-            return "Esse usuario não tem permição para esse comando";
+        if(retorno == 1){
+            return "Login não identificado";
+        }else if(retorno == 0){
+            return "Esse usuário não tem permissão para esse comando";
         }
 
-        if (!service.IDExists(id)) {
+        repositoryDLCVR.save(dlc);
+
+        return "DLC adicionado com sucesso";
+    }
+
+    @PostMapping("/postDLC/Console")
+    public String postDLCConsole(@RequestBody DLCConsole dlc){
+
+        int retorno;
+
+        retorno = uservice.loginConferer();
+
+        if(retorno == 1){
+            return "Login não identificado";
+        }else if(retorno == 0){
+            return "Esse usuário não tem permissão para esse comando";
+        }
+
+        repositoryDLCConsole.save(dlc);
+
+        return "DLC adicionado com sucesso";
+    }
+
+    @PutMapping("/updateDLC/PC/{id}")
+    public String updateDLCPC(@RequestBody DLCPC dlc, @PathVariable("id") Long id){
+
+        int retorno;
+
+        retorno = uservice.loginConferer();
+
+        if(retorno == 1){
+            return "Login não encontrado";
+        }else if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }
+
+        if(!repositoryDLCPC.existsById(id)){
             return "DLC não encontrada";
         }
 
-        service.update(DLC, id);
+        service.updateDLCPC(dlc, id);
 
         return "Os dados da DLC foram atualizados";
     }
 
-    @DeleteMapping("/deleteDLC/{id}")
-    public String deleteDLC(@PathVariable Long id) {
+    @PutMapping("/updateDLC/VR/{id}")
+    public String updateDLCVR(@RequestBody DLCVR dlc, @PathVariable("id") Long id){
 
         int retorno;
 
         retorno = uservice.loginConferer();
 
-        if (retorno == 1) {
+        if(retorno == 1){
             return "Login não encontrado";
-        } else if (retorno == 0) {
-            return "Esse usuario não tem permição para esse comando";
+        }else if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
         }
 
-        repo.deleteById(id);
+        if(!repositoryDLCVR.existsById(id)){
+            return "DLC não encontrada";
+        }
+
+        service.updateDLCVR(dlc, id);
+
+        return "Os dados da DLC foram atualizados";
+    }
+
+    @PutMapping("/updateDLC/Console/{id}")
+    public String updateDLCConsole(@RequestBody DLCConsole dlc, @PathVariable("id") Long id){
+
+        int retorno;
+
+        retorno = uservice.loginConferer();
+
+        if(retorno == 1){
+            return "Login não encontrado";
+        }else if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }
+
+        if(!repositoryDLCConsole.existsById(id)){
+            return "DLC não encontrada";
+        }
+
+        service.updateDLCConsole(dlc, id);
+
+        return "Os dados da DLC foram atualizados";
+    }
+
+    @DeleteMapping("/deleteDLC/PC/{id}")
+    public String deleteDLCPC(@PathVariable("id") Long id){
+
+        int retorno;
+
+        retorno = uservice.loginConferer();
+
+        if(retorno == 1){
+            return "Login não encontrado";
+        }else if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }
+
+        if(!repositoryDLCPC.existsById(id)){
+            return "DLC não encontrada";
+        }
+
+        repositoryDLCPC.deleteById(id);
 
         return "DLC deletada com sucesso";
     }
 
+    @DeleteMapping("/deleteDLC/VR/{id}")
+    public String deleteDLCVR(@PathVariable("id") Long id){
+
+        int retorno;
+
+        retorno = uservice.loginConferer();
+
+        if(retorno == 1){
+            return "Login não encontrado";
+        }else if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }
+
+        if(repositoryDLCVR.existsById(id)){
+            return "DLC não encontrada";
+        }
+
+        repositoryDLCVR.deleteById(id);
+
+        return "DLC deletada com sucesso";
+    }
+
+    @DeleteMapping("/deleteDLC/Console/{id}")
+    public String deleteDLCConsole(@PathVariable("id") Long id){
+
+        int retorno;
+
+        retorno = uservice.loginConferer();
+
+        if(retorno == 1){
+            return "Login não encontrado";
+        }else if(retorno == 0){
+            return "Esse usuário não tem permissão para executar esse comando";
+        }
+
+        if(repositoryDLCConsole.existsById(id)){
+            return "DLC não encontrada";
+        }
+
+        repositoryDLCConsole.deleteById(id);
+
+        return "DLC deletada com sucesso";
+    }
 
 }

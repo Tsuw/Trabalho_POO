@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class DLCPCDTO {
 
-    private Long id;
     private String ownedGame;
     private String name;
     private Date releaseDate;
@@ -20,14 +19,6 @@ public class DLCPCDTO {
     private String platform;
     private Requirements minimumRequirements;
     private Requirements recommendedRequirements;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getOwnedGame() {
         return ownedGame;

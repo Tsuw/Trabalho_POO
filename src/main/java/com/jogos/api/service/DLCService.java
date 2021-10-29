@@ -1,7 +1,8 @@
 package com.jogos.api.service;
 
-import com.jogos.api.dto.DLCDTO;
+import com.jogos.api.dto.DLCConsoleDTO;
 import com.jogos.api.dto.DLCPCDTO;
+import com.jogos.api.dto.DLCVRDTO;
 import com.jogos.api.model.*;
 import com.jogos.api.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,50 +17,13 @@ import java.util.Optional;
 public class DLCService {
 
     @Autowired
-    private DLCRepository repo;
-
-    @Autowired
-    private GamePCRepository grepo;
-
-    @Autowired
     private DLCPCRepository repositoryDPC;
 
     @Autowired
-    private GamePCRepository repositoryPC;
+    private DLCVRRepository repositoryDVR;
 
     @Autowired
-    private GameVRRepository repositoryVR;
-
-    @Autowired
-    private GameConsole1Repository repositoryConsole;
-
-    public List<DLCDTO> getDLC(String ownedGameName) {
-
-        List<DLCDTO> list = new ArrayList<>();
-        List<DLCEntity> DLCList = repo.findByOwnedGame(ownedGameName);
-
-        for (int i = 0; i < DLCList.size(); i++) {
-
-            DLCEntity enty = DLCList.get(i);
-            DLCDTO DTO = new DLCDTO();
-
-            DTO.setId(enty.getId());
-            DTO.setOwnedGame(enty.getOwnedGame());
-            DTO.setName(enty.getName());
-            DTO.setReleaseDate(enty.getReleaseDate());
-            DTO.setDescription(enty.getDescription());
-            DTO.setDeveloper(enty.getDeveloper());
-            DTO.setDistributor(enty.getDistributor());
-            DTO.setScore(enty.getScore());
-            DTO.setPrice(enty.getPrice());
-            DTO.setGenre(enty.getGenre());
-            DTO.setRating(enty.getRating());
-
-            list.add(DTO);
-
-        }
-        return list;
-    }
+    private DLCConsoleRepository repositoryDConsole;
 
     public List<DLCPCDTO> getDLCPC(String ownedGameName){
 
@@ -71,7 +35,6 @@ public class DLCService {
             DLCPC enty = listDLC.get(i);
             DLCPCDTO dto = new DLCPCDTO();
 
-            dto.setId(enty.getId());
             dto.setOwnedGame(enty.getOwnedGame());
             dto.setName(enty.getName());
             dto.setReleaseDate(enty.getReleaseDate());
@@ -84,6 +47,7 @@ public class DLCService {
             dto.setRating(enty.getRating());
             dto.setPlatform(enty.getPlatform());
             dto.setMinimumRequirements(enty.getMinimumRequirements());
+            dto.setRecommendedRequirements(enty.getRecommendedRequirements());
 
             list.add(dto);
         }
@@ -91,60 +55,146 @@ public class DLCService {
         return list;
     }
 
-    public int NameConferer(String ownedGame, String platform){
+    public List<DLCVRDTO> getDLCVR(String ownedGameName){
 
-        if(platform.equals("PC") || platform.equals("pc")){
-            Optional<GamePC> gamePC = repositoryPC.findByName(ownedGame);
+        List<DLCVRDTO> listGame = new ArrayList<>();
+        List<DLCVR> listDLC = repositoryDVR.findByOwnedGame(ownedGameName);
 
-            if(gamePC.get().isHasDLC() == false){
-                return 1;
-            } else return 0;
+        for(int i = 0; i < listDLC.size(); i ++){
 
-        }else if(platform.equals("VR") || platform.equals("vr")){
-            Optional<GameVR> gameVR = repositoryVR.findByName(ownedGame);
+            DLCVR enty = listDLC.get(i);
+            DLCVRDTO dto = new DLCVRDTO();
 
-            if(gameVR.get().isHasDLC() == false){
-                return 1;
-            }else return 0;
+            dto.setOwnedGame(enty.getOwnedGame());
+            dto.setName(enty.getName());
+            dto.setReleaseDate(enty.getReleaseDate());
+            dto.setDescription(enty.getDescription());
+            dto.setDeveloper(enty.getDeveloper());
+            dto.setDistributor(enty.getDistributor());
+            dto.setScore(enty.getScore());
+            dto.setPrice(enty.getPrice());
+            dto.setGenre(enty.getGenre());
+            dto.setRating(enty.getRating());
+            dto.setPlatform(enty.getPlatform());
+            dto.setMinimumRequirements(enty.getMinimumRequirements());
+            dto.setRecommendedRequirements(enty.getRecommendedRequirements());
 
-        }else{
-            Optional<GameConsole> gameConsole = repositoryConsole.findByName(ownedGame);
+            listGame.add(dto);
+        }
 
-            if(gameConsole.get().isHasDLC() == false){
-                return 1;
-            }else return 0;
+        return listGame;
+    }
+
+    public List<DLCConsoleDTO> getDLCConsele(String ownedGameName){
+
+        List<DLCConsoleDTO> listGame = new ArrayList<>();
+        List<DLCConsole> listDLC = repositoryDConsole.findByOwnedGame(ownedGameName);
+
+        for(int i = 0; i < listDLC.size(); i++){
+
+            DLCConsole enty = listDLC.get(i);
+            DLCConsoleDTO dto = new DLCConsoleDTO();
+
+            dto.setOwnedGame(enty.getOwnedGame());
+            dto.setName(enty.getName());
+            dto.setReleaseDate(enty.getReleaseDate());
+            dto.setDescription(enty.getDescription());
+            dto.setDeveloper(enty.getDeveloper());
+            dto.setDistributor(enty.getDistributor());
+            dto.setScore(enty.getScore());
+            dto.setPrice(enty.getPrice());
+            dto.setGenre(enty.getGenre());
+            dto.setRating(enty.getRating());
+            dto.setPlatform(enty.getPlatform());
+            dto.setStorage(enty.getStorage());
+
+            listGame.add(dto);
+        }
+
+        return listGame;
+    }
+
+    public void updateDLCPC(DLCPC dlc, Long id){
+
+        Optional<DLCPC> enty = repositoryDPC.findById(id);
+
+        if(enty.isPresent()){
+
+            DLCPC entyUpdate = enty.get();
+
+            entyUpdate.setOwnedGame(dlc.getOwnedGame());
+            entyUpdate.setName(dlc.getName());
+            entyUpdate.setReleaseDate(dlc.getReleaseDate());
+            entyUpdate.setDescription(dlc.getDescription());
+            entyUpdate.setDeveloper(dlc.getDeveloper());
+            entyUpdate.setPeopleInvolved(dlc.getPeopleInvolved());
+            entyUpdate.setSoldCopies(dlc.getSoldCopies());
+            entyUpdate.setDistributor(dlc.getDistributor());
+            entyUpdate.setScore(dlc.getScore());
+            entyUpdate.setPrice(dlc.getPrice());
+            entyUpdate.setGenre(dlc.getGenre());
+            entyUpdate.setRating(dlc.getRating());
+            entyUpdate.setPlatform(dlc.getPlatform());
+            entyUpdate.setMinimumRequirements(dlc.getMinimumRequirements());
+            entyUpdate.setRecommendedRequirements(dlc.getRecommendedRequirements());
+
+            repositoryDPC.save(entyUpdate);
         }
     }
 
-    public boolean IDExists(Long ID) {
+    public void updateDLCVR(DLCVR dlc, Long id){
 
-        return repo.existsById(ID);
+        Optional<DLCVR> enty = repositoryDVR.findById(id);
+
+        if(enty.isPresent()){
+
+            DLCVR entyUpdate = enty.get();
+
+            entyUpdate.setOwnedGame(dlc.getOwnedGame());
+            entyUpdate.setName(dlc.getName());
+            entyUpdate.setReleaseDate(dlc.getReleaseDate());
+            entyUpdate.setDescription(dlc.getDescription());
+            entyUpdate.setDeveloper(dlc.getDeveloper());
+            entyUpdate.setPeopleInvolved(dlc.getPeopleInvolved());
+            entyUpdate.setSoldCopies(dlc.getSoldCopies());
+            entyUpdate.setDistributor(dlc.getDistributor());
+            entyUpdate.setScore(dlc.getScore());
+            entyUpdate.setPrice(dlc.getPrice());
+            entyUpdate.setGenre(dlc.getGenre());
+            entyUpdate.setRating(dlc.getRating());
+            entyUpdate.setPlatform(dlc.getPlatform());
+            entyUpdate.setMinimumRequirements(dlc.getMinimumRequirements());
+            entyUpdate.setRecommendedRequirements(dlc.getRecommendedRequirements());
+
+            repositoryDVR.save(entyUpdate);
+        }
     }
 
-    public void update(DLCEntity DLC, Long id) {
+    public void updateDLCConsole(DLCConsole dlc, Long id){
 
-        Optional<DLCEntity> enty = repo.findById(id);
+        Optional<DLCConsole> enty = repositoryDConsole.findById(id);
 
-        if (enty.isPresent()) {
+        if(enty.isPresent()){
 
-            DLCEntity enty_update = enty.get();
+            DLCConsole entyUpdate = enty.get();
 
-            enty_update.setOwnedGame(DLC.getOwnedGame());
-            enty_update.setName(DLC.getName());
-            enty_update.setReleaseDate(DLC.getReleaseDate());
-            enty_update.setDescription(DLC.getDescription());
-            enty_update.setDeveloper(DLC.getDeveloper());
-            enty_update.setPeopleInvolved(DLC.getPeopleInvolved());
-            enty_update.setSoldCopies(DLC.getSoldCopies());
-            enty_update.setDistributor(DLC.getDistributor());
-            enty_update.setScore(DLC.getScore());
-            enty_update.setPrice(DLC.getPrice());
-            enty_update.setGenre(DLC.getGenre());
-            enty_update.setRating(DLC.getRating());
+            entyUpdate.setOwnedGame(dlc.getOwnedGame());
+            entyUpdate.setName(dlc.getName());
+            entyUpdate.setReleaseDate(dlc.getReleaseDate());
+            entyUpdate.setDescription(dlc.getDescription());
+            entyUpdate.setDeveloper(dlc.getDeveloper());
+            entyUpdate.setPeopleInvolved(dlc.getPeopleInvolved());
+            entyUpdate.setSoldCopies(dlc.getSoldCopies());
+            entyUpdate.setDistributor(dlc.getDistributor());
+            entyUpdate.setScore(dlc.getScore());
+            entyUpdate.setPrice(dlc.getPrice());
+            entyUpdate.setGenre(dlc.getGenre());
+            entyUpdate.setRating(dlc.getRating());
+            entyUpdate.setPlatform(dlc.getPlatform());
+            entyUpdate.setStorage(dlc.getStorage());
 
-            repo.save(enty_update);
+            repositoryDConsole.save(entyUpdate);
         }
-
     }
 
 }

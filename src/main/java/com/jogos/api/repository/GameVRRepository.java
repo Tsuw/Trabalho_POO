@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface GameVRRepository extends JpaRepository<GameVR, Long> {
 
     Optional<GameVR> findByName(String name);
+    Boolean existsByName(String name);
 
 }

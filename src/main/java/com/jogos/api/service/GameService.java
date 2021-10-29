@@ -1,12 +1,12 @@
 package com.jogos.api.service;
 
 import com.jogos.api.dto.GameConsoleDTO;
-import com.jogos.api.dto.GamePC1DTO;
+import com.jogos.api.dto.GamePCDTO;
 import com.jogos.api.dto.GameVRDTO;
 import com.jogos.api.model.GameConsole;
 import com.jogos.api.model.GamePC;
 import com.jogos.api.model.GameVR;
-import com.jogos.api.repository.GameConsole1Repository;
+import com.jogos.api.repository.GameConsoleRepository;
 import com.jogos.api.repository.GamePCRepository;
 import com.jogos.api.repository.GameVRRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +27,10 @@ public class GameService {
     private GameVRRepository repositoryVR;
 
     @Autowired
-    private GameConsole1Repository repositoryConsole;
+    private GameConsoleRepository repositoryConsole;
 
-    public List<GamePC1DTO> getGamesPC(){
-        List<GamePC1DTO> listGames = new ArrayList<>();
+    public List<GamePCDTO> getGamesPC(){
+        List<GamePCDTO> listGames = new ArrayList<>();
 
         List<GamePC> games = repositoryPC.findAll();
 
@@ -38,7 +38,7 @@ public class GameService {
 
             GamePC tmp = games.get(i);
 
-            GamePC1DTO dto = new GamePC1DTO();
+            GamePCDTO dto = new GamePCDTO();
 
             dto.setName(tmp.getName());
             dto.setReleaseDate(tmp.getReleaseDate());
