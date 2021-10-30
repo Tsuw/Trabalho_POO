@@ -104,6 +104,7 @@ public class DLCController {
     public String postDLCPC(@RequestBody DLCPC dlc){
 
         int retorno;
+        String erro = service.validationDLCPC(dlc);
 
         retorno = uservice.loginConferer();
 
@@ -113,15 +114,20 @@ public class DLCController {
             return "Esse usuário não tem permissão para esse comando";
         }
 
-        repositoryDLCPC.save(dlc);
+        if(erro == null){
+            repositoryDLCPC.save(dlc);
 
-        return "DLC adicionado com sucesso";
+            return "DLC adicionado com sucesso";
+        }else{
+            return erro;
+        }
     }
 
     @PostMapping("/postDLC/VR")
     public String postDLCVR(@RequestBody DLCVR dlc){
 
         int retorno;
+        String erro = service.validationDLCVR(dlc);
 
         retorno = uservice.loginConferer();
 
@@ -131,15 +137,21 @@ public class DLCController {
             return "Esse usuário não tem permissão para esse comando";
         }
 
-        repositoryDLCVR.save(dlc);
+        if(erro == null){
 
-        return "DLC adicionado com sucesso";
+            repositoryDLCVR.save(dlc);
+
+            return "DLC adicionada com sucesso";
+        }else{
+            return erro;
+        }
     }
 
     @PostMapping("/postDLC/Console")
     public String postDLCConsole(@RequestBody DLCConsole dlc){
 
         int retorno;
+        String erro = service.validationDLCConsole(dlc);
 
         retorno = uservice.loginConferer();
 
@@ -149,15 +161,20 @@ public class DLCController {
             return "Esse usuário não tem permissão para esse comando";
         }
 
-        repositoryDLCConsole.save(dlc);
+        if(erro == null){
+            repositoryDLCConsole.save(dlc);
 
-        return "DLC adicionado com sucesso";
+            return "DLC adicionado com sucesso";
+        }else{
+            return erro;
+        }
     }
 
     @PutMapping("/updateDLC/PC/{id}")
     public String updateDLCPC(@RequestBody DLCPC dlc, @PathVariable("id") Long id){
 
         int retorno;
+        String erro = service.validationDLCPC(dlc);
 
         retorno = uservice.loginConferer();
 
@@ -171,15 +188,20 @@ public class DLCController {
             return "DLC não encontrada";
         }
 
-        service.updateDLCPC(dlc, id);
+        if(erro == null){
+            service.updateDLCPC(dlc, id);
 
-        return "Os dados da DLC foram atualizados";
+            return "Os dados da DLC foram atualizados";
+        }else{
+            return erro;
+        }
     }
 
     @PutMapping("/updateDLC/VR/{id}")
     public String updateDLCVR(@RequestBody DLCVR dlc, @PathVariable("id") Long id){
 
         int retorno;
+        String erro = service.validationDLCVR(dlc);
 
         retorno = uservice.loginConferer();
 
@@ -193,15 +215,20 @@ public class DLCController {
             return "DLC não encontrada";
         }
 
-        service.updateDLCVR(dlc, id);
+        if(erro == null){
+            service.updateDLCVR(dlc, id);
 
-        return "Os dados da DLC foram atualizados";
+            return "Os dados da DLC foram atualizados";
+        }else{
+            return erro;
+        }
     }
 
     @PutMapping("/updateDLC/Console/{id}")
     public String updateDLCConsole(@RequestBody DLCConsole dlc, @PathVariable("id") Long id){
 
         int retorno;
+        String erro = service.validationDLCConsole(dlc);
 
         retorno = uservice.loginConferer();
 
@@ -215,9 +242,13 @@ public class DLCController {
             return "DLC não encontrada";
         }
 
-        service.updateDLCConsole(dlc, id);
+        if(erro == null){
+            service.updateDLCConsole(dlc, id);
 
-        return "Os dados da DLC foram atualizados";
+            return "Os dados da DLC foram atualizados";
+        }else{
+            return erro;
+        }
     }
 
     @DeleteMapping("/deleteDLC/PC/{id}")

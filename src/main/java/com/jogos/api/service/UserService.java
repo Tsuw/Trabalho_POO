@@ -78,13 +78,16 @@ public class UserService {
     public int loginConferer() {
 
         int retorno;
+
+        if(this.login.getEmail() == null){
+            return 1;
+        }
+
         retorno = ADMConferer();
 
-        if (this.login.getEmail() == null) {
-            return 1;
-        } else if (retorno == 1) {
+        if(retorno == 1){
             return 2;
-        } else {
+        }else{
             return 0;
         }
     }

@@ -1,5 +1,7 @@
 package com.jogos.api.dto;
 
+import com.jogos.api.model.NeutralGame;
+
 import java.util.Date;
 
 public class GameConsoleDTO {
@@ -15,6 +17,20 @@ public class GameConsoleDTO {
     private boolean hasDLC;
     private String platform;
     private String storage;
+
+    public GameConsoleDTO(NeutralGame enty) {
+        this.name = enty.getName();
+        this.releaseDate = enty.getReleaseDate();
+        this.description = enty.getDescription();
+        this.developer = enty.getDeveloper();
+        this.distributor = enty.getDistributor();
+        this.score = enty.getScore();
+        this.price = enty.getPrice();
+        this.genre = enty.getGenre();
+        this.rating = enty.getRating();
+        this.hasDLC = enty.isHasDLC();
+        this.platform = enty.getPlatform();
+    }
 
     public String getName() {
         return name;

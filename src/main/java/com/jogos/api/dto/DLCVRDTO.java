@@ -1,6 +1,6 @@
 package com.jogos.api.dto;
 
-import com.jogos.api.model.Requirements;
+import com.jogos.api.model.NeutralDLC;
 
 import java.util.Date;
 
@@ -17,8 +17,22 @@ public class DLCVRDTO {
     private String genre;
     private int rating;
     private String platform;
-    private Requirements minimumRequirements;
-    private Requirements recommendedRequirements;
+    private RequirementsDTO minimumRequirements;
+    private RequirementsDTO recommendedRequirements;
+
+    public DLCVRDTO(NeutralDLC enty) {
+        this.ownedGame = enty.getOwnedGame();
+        this.name = enty.getName();
+        this.releaseDate = enty.getReleaseDate();
+        this.description = enty.getDescription();
+        this.developer = enty.getDeveloper();
+        this.distributor = enty.getDistributor();
+        this.score = enty.getScore();
+        this.price = enty.getPrice();
+        this.genre = enty.getGenre();
+        this.rating = enty.getRating();
+        this.platform = enty.getPlatform();
+    }
 
     public String getOwnedGame() {
         return ownedGame;
@@ -108,19 +122,19 @@ public class DLCVRDTO {
         this.platform = platform;
     }
 
-    public Requirements getMinimumRequirements() {
+    public RequirementsDTO getMinimumRequirements() {
         return minimumRequirements;
     }
 
-    public void setMinimumRequirements(Requirements minimumRequirements) {
+    public void setMinimumRequirements(RequirementsDTO minimumRequirements) {
         this.minimumRequirements = minimumRequirements;
     }
 
-    public Requirements getRecommendedRequirements() {
+    public RequirementsDTO getRecommendedRequirements() {
         return recommendedRequirements;
     }
 
-    public void setRecommendedRequirements(Requirements recommendedRequirements) {
+    public void setRecommendedRequirements(RequirementsDTO recommendedRequirements) {
         this.recommendedRequirements = recommendedRequirements;
     }
 }

@@ -87,6 +87,7 @@ public class GameController {
     public String postGamePC(@RequestBody GamePC game) {
 
         int retorno;
+        String erro = service.validationPC(game);
 
         retorno = userService.loginConferer();
 
@@ -96,36 +97,22 @@ public class GameController {
             return "Login necessário";
         }
 
-        retorno = service.validationPC(game);
+        if(erro == null){
 
-        if (retorno == 1) {
-            return "Não pode ter uma quantidade negativa de pessoas envolvidas";
-        } else if (retorno == 2) {
-            return "Não pode ter número de cópias negativo";
-        } else if (retorno == 3) {
-            return "A nota do jogo não pode ser negativa";
-        } else if (retorno == 4) {
-            return "A nota do jogo não pode ser negativa";
-        } else if (retorno == 5) {
-            return "A classificação indicativa não pode ser negativa e nem maior do que 21 anos";
-        } else if (retorno == 6) {
-            return "O genero do jogo não pode estar vazio";
-        } else if (retorno == 7) {
-            return "O jogo não pode ficar sem um developer";
-        } else if (retorno == 8) {
-            return "O jogo não pode não ter um nome";
+            repositoryPC.save(game);
+
+            return "Jogo adicionado com sucesso";
+
+        }else{
+            return erro;
         }
-
-        repositoryPC.save(game);
-
-        return "Jogo adicionado com sucesso";
-
     }
 
     @PostMapping("/postGame/VR")
     public String postGameVR(@RequestBody GameVR game){
 
         int retorno;
+        String erro = service.validationVR(game);
 
         retorno = userService.loginConferer();
 
@@ -135,35 +122,22 @@ public class GameController {
             return "Login necessário";
         }
 
-        retorno = service.validationVR(game);
+        if(erro == null){
 
-        if (retorno == 1) {
-            return "Não pode ter uma quantidade negativa de pessoas envolvidas";
-        } else if (retorno == 2) {
-            return "Não pode ter número de cópias negativo";
-        } else if (retorno == 3) {
-            return "A nota do jogo não pode ser negativa";
-        } else if (retorno == 4) {
-            return "A nota do jogo não pode ser negativa";
-        } else if (retorno == 5) {
-            return "A classificação indicativa não pode ser negativa e nem maior do que 21 anos";
-        } else if (retorno == 6) {
-            return "O genero do jogo não pode estar vazio";
-        } else if (retorno == 7) {
-            return "O jogo não pode ficar sem um developer";
-        } else if (retorno == 8) {
-            return "O jogo não pode não ter um nome";
+            repositoryVR.save(game);
+
+            return "Jogo adicionado com sucesso";
+
+        }else{
+            return erro;
         }
-
-        repositoryVR.save(game);
-
-        return "Jogo adicionado com sucesso";
     }
 
     @PostMapping("/postGame/Console")
     public String postGameConsole(@RequestBody GameConsole game){
 
         int retorno;
+        String erro = service.validationConsole(game);
 
         retorno = userService.loginConferer();
 
@@ -173,29 +147,15 @@ public class GameController {
             return "Login necessário";
         }
 
-        retorno = service.validationConsole(game);
+        if(erro == null){
 
-        if (retorno == 1) {
-            return "Não pode ter uma quantidade negativa de pessoas envolvidas";
-        } else if (retorno == 2) {
-            return "Não pode ter número de cópias negativo";
-        } else if (retorno == 3) {
-            return "A nota do jogo não pode ser negativa";
-        } else if (retorno == 4) {
-            return "A nota do jogo não pode ser negativa";
-        } else if (retorno == 5) {
-            return "A classificação indicativa não pode ser negativa e nem maior do que 21 anos";
-        } else if (retorno == 6) {
-            return "O genero do jogo não pode estar vazio";
-        } else if (retorno == 7) {
-            return "O jogo não pode ficar sem um developer";
-        } else if (retorno == 8) {
-            return "O jogo não pode não ter um nome";
+            repositoryConsole.save(game);
+
+            return "Jogo adicionado com sucesso";
+
+        }else{
+            return erro;
         }
-
-        repositoryConsole.save(game);
-
-        return "Jogo adicionado com sucesso";
     }
 
     @DeleteMapping("/deleteGame/PC/{id}")
@@ -211,7 +171,7 @@ public class GameController {
             return "Login necessário";
         }
 
-        if(!service.IdPCExists(id)){
+        if(!repositoryPC.existsById(id)){
             return "Jogo não encontrado";
         }
 
@@ -233,7 +193,7 @@ public class GameController {
             return "Login necessãrio";
         }
 
-        if(!service.IdVRExists(id)){
+        if(!repositoryVR.existsById(id)){
             return "Jogo não encontrado";
         }
 
@@ -255,7 +215,7 @@ public class GameController {
             return "Login necessãrio";
         }
 
-        if(!service.IdConsoleExists(id)){
+        if(!repositoryConsole.existsById(id)){
             return "Jogo não encontrado";
         }
 
@@ -268,6 +228,7 @@ public class GameController {
     public String updateGamePC(@PathVariable Long id, @RequestBody GamePC game){
 
         int retorno;
+        String erro = service.validationPC(game);
 
         retorno = userService.loginConferer();
 
@@ -277,19 +238,24 @@ public class GameController {
             return "Login necessário";
         }
 
-        if(!service.IdPCExists(id)){
+        if(!repositoryPC.existsById(id)){
             return "Jogo não encontrado";
         }
 
-        service.updateGamePC(id, game);
+        if(erro == null){
+            service.updateGamePC(id, game);
 
-        return "Os dados do jogo foram atualizados";
+            return "Os dados do jogo foram atualizados";
+        }else{
+            return erro;
+        }
     }
 
     @PutMapping("/updateGame/VR/{id}")
     public String updateGameVR(@PathVariable Long id, @RequestBody GameVR game){
 
         int retorno;
+        String erro = service.validationVR(game);
 
         retorno = userService.loginConferer();
 
@@ -299,19 +265,24 @@ public class GameController {
             return "Login necessário";
         }
 
-        if(!service.IdVRExists(id)){
+        if(!repositoryVR.existsById(id)){
             return "Jogo não encontrado";
         }
 
-        service.updateGameVR(id, game);
+        if(erro == null){
+            service.updateGameVR(id, game);
 
-        return "Os dados do jogo foram atualizados";
+            return "Os dados do jogo foram atualizados";
+        }else{
+            return erro;
+        }
     }
 
     @PutMapping("/updateGame/Console/{id}")
     public String updateGameConsole(@PathVariable Long id, @RequestBody GameConsole game){
 
         int retorno;
+        String erro = service.validationConsole(game);
 
         retorno = userService.loginConferer();
 
@@ -321,19 +292,16 @@ public class GameController {
             return "Login necessário";
         }
 
-        if(!service.IdConsoleExists(id)){
+        if(!repositoryConsole.existsById(id)){
             return "Jogo não encontrado";
         }
 
-        service.updateGameConsole(id, game);
+        if(erro == null){
+            service.updateGameConsole(id, game);
 
-        return "Os dados do jogo foram atualizados";
+            return "Os dados do jogo foram atualizados";
+        }else{
+            return erro;
+        }
     }
-
-        /*@DeleteMapping("/delete")
-        public String deleteAll(){
-            repo.deleteAll();
-
-            return "Apagou";
-        }*/
 }
