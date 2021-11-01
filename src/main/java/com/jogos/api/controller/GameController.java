@@ -11,7 +11,8 @@ import com.jogos.api.repository.GamePCRepository;
 import com.jogos.api.repository.GameVRRepository;
 import com.jogos.api.service.GameService;
 import com.jogos.api.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,288 +21,263 @@ import java.util.List;
 @RestController
 public class GameController {
 
-    @Autowired
-    private GameService service;
+    private final GameService service;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private GamePCRepository repositoryPC;
+    private final GamePCRepository repositoryPC;
 
-    @Autowired
-    private GameVRRepository repositoryVR;
+    private final GameVRRepository repositoryVR;
 
-    @Autowired
-    private GameConsoleRepository repositoryConsole;
+    private final GameConsoleRepository repositoryConsole;
+
+    private String retorno;
+
+    public GameController(GameService service, UserService userService, GamePCRepository repositoryPC, GameVRRepository repositoryVR, GameConsoleRepository repositoryConsole) {
+        this.service = service;
+        this.userService = userService;
+        this.repositoryPC = repositoryPC;
+        this.repositoryVR = repositoryVR;
+        this.repositoryConsole = repositoryConsole;
+    }
 
     @GetMapping("/getGames/PC")
-    public List<GamePCDTO> getGamesPC(){
+    public ResponseEntity<List<GamePCDTO>> getGamesPC(){
 
-        int retorno;
         List<GamePCDTO> vazio = new ArrayList<>();
         List<GamePCDTO> listGames = service.getGamesPC();
+        int retorno;
 
-        retorno = userService.loginConferer();
+        retorno = userService.alternativeLoginConferer();
 
         if(retorno == 1){
-            return vazio;
+            return ResponseEntity.badRequest().body(vazio);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(listGames);
         }
-
-        return listGames;
     }
 
     @GetMapping("/getGames/VR")
-    public List<GameVRDTO> getGamesVR(){
+    public ResponseEntity<List<GameVRDTO>> getGamesVR(){
 
-        int retorno;
         List<GameVRDTO> vazio = new ArrayList<>();
         List<GameVRDTO> listGames = service.getGamesVR();
+        int retorno;
 
-        retorno = userService.loginConferer();
+        retorno = userService.alternativeLoginConferer();
 
         if(retorno == 1){
-            return vazio;
+            return ResponseEntity.badRequest().body(vazio);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(listGames);
         }
-
-        return listGames;
     }
 
     @GetMapping("/getGames/Console")
-    public List<GameConsoleDTO> getGamesConsole(){
+    public ResponseEntity<List<GameConsoleDTO>> getGamesConsole(){
 
-        int retorno;
         List<GameConsoleDTO> vazio = new ArrayList<>();
         List<GameConsoleDTO> listGames = service.getGamesConsole();
+        int retorno;
 
-        retorno = userService.loginConferer();
+        retorno = userService.alternativeLoginConferer();
 
         if(retorno == 1){
-            return vazio;
+            return ResponseEntity.badRequest().body(vazio);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(listGames);
         }
-
-        return listGames;
     }
 
     @PostMapping("/postGame/PC")
-    public String postGamePC(@RequestBody GamePC game) {
+    public ResponseEntity<String> postGamePC(@RequestBody GamePC game) {
 
-        int retorno;
         String erro = service.validationPC(game);
 
-        retorno = userService.loginConferer();
+        this.retorno = userService.loginConferer();
 
-        if (retorno == 0) {
-            return "Esse usuário não tem permissão para esse comando";
-        }else if(retorno == 1){
-            return "Login necessário";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
         if(erro == null){
 
             repositoryPC.save(game);
 
-            return "Jogo adicionado com sucesso";
+            return ResponseEntity.status(HttpStatus.OK).body("Jogo adicionado com sucesso");
 
         }else{
-            return erro;
+            return ResponseEntity.badRequest().body(erro);
         }
     }
 
     @PostMapping("/postGame/VR")
-    public String postGameVR(@RequestBody GameVR game){
+    public ResponseEntity<String> postGameVR(@RequestBody GameVR game){
 
-        int retorno;
         String erro = service.validationVR(game);
 
-        retorno = userService.loginConferer();
+        this.retorno = userService.loginConferer();
 
-        if(retorno == 0){
-            return "Esse usuario não tem permissão para usar esse comando";
-        }else if(retorno == 1){
-            return "Login necessário";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
         if(erro == null){
 
             repositoryVR.save(game);
 
-            return "Jogo adicionado com sucesso";
+            return ResponseEntity.status(HttpStatus.OK).body("Jogo adicionado com sucesso");
 
         }else{
-            return erro;
+            return ResponseEntity.badRequest().body(erro);
         }
     }
 
     @PostMapping("/postGame/Console")
-    public String postGameConsole(@RequestBody GameConsole game){
+    public ResponseEntity<String> postGameConsole(@RequestBody GameConsole game){
 
-        int retorno;
         String erro = service.validationConsole(game);
 
-        retorno = userService.loginConferer();
+        this.retorno = userService.loginConferer();
 
-        if(retorno == 0){
-            return "Esse usuario não tem permissão para usar esse comando";
-        }else if(retorno == 1){
-            return "Login necessário";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
         if(erro == null){
 
             repositoryConsole.save(game);
 
-            return "Jogo adicionado com sucesso";
+            return ResponseEntity.status(HttpStatus.OK).body("Jogo adicionado com sucesso");
 
         }else{
-            return erro;
+            return ResponseEntity.badRequest().body(erro);
         }
     }
 
     @DeleteMapping("/deleteGame/PC/{id}")
-    public String deleteGamePC(@PathVariable Long id){
+    public ResponseEntity<String> deleteGamePC(@PathVariable Long id){
 
-        int retorno;
+        this.retorno = userService.loginConferer();
 
-        retorno = userService.loginConferer();
-
-        if(retorno == 0){
-            return "Esse usuário não tem permissão para executar esse comando";
-        }else if(retorno == 1){
-            return "Login necessário";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
         if(!repositoryPC.existsById(id)){
-            return "Jogo não encontrado";
+            return ResponseEntity.badRequest().body("Jogo não encontrado");
         }
 
         repositoryPC.deleteById(id);
 
-        return "Jogo deletado com sucesso";
+        return ResponseEntity.status(HttpStatus.OK).body("Jogo deletado com sucesso");
     }
 
     @DeleteMapping("/deleteGame/VR/{id}")
-    public String deleteGameVR(@PathVariable Long id){
+    public ResponseEntity<String> deleteGameVR(@PathVariable Long id){
 
-        int retorno;
+        this.retorno = userService.loginConferer();
 
-        retorno = userService.loginConferer();
-
-        if(retorno == 0){
-            return "Esse usuário não tem permissão para executar esse comando";
-        }else if(retorno == 1){
-            return "Login necessãrio";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
         if(!repositoryVR.existsById(id)){
-            return "Jogo não encontrado";
+            return ResponseEntity.badRequest().body("Jogo não encontrado");
         }
 
         repositoryVR.deleteById(id);
 
-        return "Jogo deletado com sucesso";
+        return ResponseEntity.status(HttpStatus.OK).body("Jogo deletado com sucesso");
     }
 
     @DeleteMapping("/deleteGame/Console/{id}")
-    public String deleteGameConsole(@PathVariable Long id){
+    public ResponseEntity<String> deleteGameConsole(@PathVariable Long id){
 
-        int retorno;
+        this.retorno = userService.loginConferer();
 
-        retorno = userService.loginConferer();
-
-        if(retorno == 0){
-            return "Esse usuário não tem permissão para executar esse comando";
-        }else if(retorno == 1){
-            return "Login necessãrio";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
         if(!repositoryConsole.existsById(id)){
-            return "Jogo não encontrado";
+            return ResponseEntity.badRequest().body("Jogo não encontrado");
         }
 
         repositoryConsole.deleteById(id);
 
-        return "Jogo deletado com sucesso";
+        return ResponseEntity.status(HttpStatus.OK).body("Jogo deletado com sucesso");
     }
 
     @PutMapping("/updateGame/PC/{id}")
-    public String updateGamePC(@PathVariable Long id, @RequestBody GamePC game){
+    public ResponseEntity<String> updateGamePC(@PathVariable Long id, @RequestBody GamePC game){
 
-        int retorno;
         String erro = service.validationPC(game);
 
-        retorno = userService.loginConferer();
+        this.retorno = userService.loginConferer();
 
-        if(retorno == 0){
-            return "Esse usuário não tem permissão para executar esse comando";
-        }else if(retorno == 1){
-            return "Login necessário";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
         if(!repositoryPC.existsById(id)){
-            return "Jogo não encontrado";
+            return ResponseEntity.badRequest().body("Jogo não encontrado");
         }
 
         if(erro == null){
             service.updateGamePC(id, game);
 
-            return "Os dados do jogo foram atualizados";
+            return ResponseEntity.status(HttpStatus.OK).body("Os dados do jogo foram atualizados");
         }else{
-            return erro;
+            return ResponseEntity.badRequest().body(erro);
         }
     }
 
     @PutMapping("/updateGame/VR/{id}")
-    public String updateGameVR(@PathVariable Long id, @RequestBody GameVR game){
+    public ResponseEntity<String> updateGameVR(@PathVariable Long id, @RequestBody GameVR game){
 
-        int retorno;
         String erro = service.validationVR(game);
 
-        retorno = userService.loginConferer();
+        this.retorno = userService.loginConferer();
 
-        if(retorno == 0){
-            return "Esse usuário não tem permissão para executar esse comando";
-        }else if(retorno == 1){
-            return "Login necessário";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
         if(!repositoryVR.existsById(id)){
-            return "Jogo não encontrado";
+            return ResponseEntity.badRequest().body("Jogo não encontrado");
         }
 
         if(erro == null){
             service.updateGameVR(id, game);
 
-            return "Os dados do jogo foram atualizados";
+            return ResponseEntity.status(HttpStatus.OK).body("Os dados do jogo foram atualizados");
         }else{
-            return erro;
+            return ResponseEntity.badRequest().body(erro);
         }
     }
 
     @PutMapping("/updateGame/Console/{id}")
-    public String updateGameConsole(@PathVariable Long id, @RequestBody GameConsole game){
+    public ResponseEntity<String> updateGameConsole(@PathVariable Long id, @RequestBody GameConsole game){
 
-        int retorno;
         String erro = service.validationConsole(game);
 
-        retorno = userService.loginConferer();
+        this.retorno = userService.loginConferer();
 
-        if(retorno == 0){
-            return "Esse usuário não tem permissão para executar esse comando";
-        }else if(retorno == 1){
-            return "Login necessário";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
         if(!repositoryConsole.existsById(id)){
-            return "Jogo não encontrado";
+            return ResponseEntity.badRequest().body("Jogo não encontrado");
         }
 
         if(erro == null){
             service.updateGameConsole(id, game);
 
-            return "Os dados do jogo foram atualizados";
+            return ResponseEntity.status(HttpStatus.OK).body("Os dados do jogo foram atualizados");
         }else{
-            return erro;
+            return ResponseEntity.badRequest().body(erro);
         }
     }
 }

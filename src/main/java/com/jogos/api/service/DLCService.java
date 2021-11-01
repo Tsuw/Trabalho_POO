@@ -1,12 +1,11 @@
 package com.jogos.api.service;
 
 import com.jogos.api.dto.DLCConsoleDTO;
-import com.jogos.api.dto.DLCPCDTO;
-import com.jogos.api.dto.DLCVRDTO;
+import com.jogos.api.dto.DlcPcDto;
+import com.jogos.api.dto.DlcVrDto;
 import com.jogos.api.dto.RequirementsDTO;
 import com.jogos.api.model.*;
 import com.jogos.api.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,24 +17,26 @@ import java.util.Optional;
 
 public class DLCService {
 
-    @Autowired
-    private DLCPCRepository repositoryDPC;
+    private final DLCPCRepository repositoryDPC;
 
-    @Autowired
-    private DLCVRRepository repositoryDVR;
+    private final DLCVRRepository repositoryDVR;
 
-    @Autowired
-    private DLCConsoleRepository repositoryDConsole;
+    private final DLCConsoleRepository repositoryDConsole;
 
-    public List<DLCPCDTO> getDLCPC(String ownedGameName){
+    public DLCService(DLCPCRepository repositoryDPC, DLCVRRepository repositoryDVR, DLCConsoleRepository repositoryDConsole) {
+        this.repositoryDPC = repositoryDPC;
+        this.repositoryDVR = repositoryDVR;
+        this.repositoryDConsole = repositoryDConsole;
+    }
 
-        List<DLCPCDTO> list = new ArrayList<>();
-        List<DLCPC> listDLC = repositoryDPC.findByOwnedGame(ownedGameName);
+    public List<DlcPcDto> getDLCPC(String ownedGameName){
 
-        for(int i = 0; i < listDLC.size(); i++){
+        List<DlcPcDto> list = new ArrayList<>();
+        List<DlcPC> listDLC = repositoryDPC.findByOwnedGame(ownedGameName);
 
-            DLCPC enty = listDLC.get(i);
-            DLCPCDTO dto = new DLCPCDTO(enty);
+        for (DlcPC enty : listDLC) {
+
+            DlcPcDto dto = new DlcPcDto(enty);
 
             dto.setMinimumRequirements(new RequirementsDTO(enty.getMinimumRequirements()));
             dto.setRecommendedRequirements(new RequirementsDTO(enty.getRecommendedRequirements()));
@@ -46,15 +47,14 @@ public class DLCService {
         return list;
     }
 
-    public List<DLCVRDTO> getDLCVR(String ownedGameName){
+    public List<DlcVrDto> getDLCVR(String ownedGameName){
 
-        List<DLCVRDTO> listGame = new ArrayList<>();
-        List<DLCVR> listDLC = repositoryDVR.findByOwnedGame(ownedGameName);
+        List<DlcVrDto> listGame = new ArrayList<>();
+        List<DlcVR> listDLC = repositoryDVR.findByOwnedGame(ownedGameName);
 
-        for(int i = 0; i < listDLC.size(); i ++){
+        for (DlcVR enty : listDLC) {
 
-            DLCVR enty = listDLC.get(i);
-            DLCVRDTO dto = new DLCVRDTO(enty);
+            DlcVrDto dto = new DlcVrDto(enty);
 
             dto.setMinimumRequirements(new RequirementsDTO(enty.getMinimumRequirements()));
             dto.setRecommendedRequirements(new RequirementsDTO(enty.getRecommendedRequirements()));
@@ -70,9 +70,8 @@ public class DLCService {
         List<DLCConsoleDTO> listGame = new ArrayList<>();
         List<DLCConsole> listDLC = repositoryDConsole.findByOwnedGame(ownedGameName);
 
-        for(int i = 0; i < listDLC.size(); i++){
+        for (DLCConsole enty : listDLC) {
 
-            DLCConsole enty = listDLC.get(i);
             DLCConsoleDTO dto = new DLCConsoleDTO(enty);
 
             dto.setStorage(enty.getStorage());
@@ -83,11 +82,11 @@ public class DLCService {
         return listGame;
     }
 
-    public String validationDLCPC(DLCPC dlcpc){
+    public String validationDLCPC(DlcPC dlcpc){
         return validationDLCPCSecret(dlcpc);
     }
 
-    private String validationDLCPCSecret(DLCPC dlcpc){
+    private String validationDLCPCSecret(DlcPC dlcpc){
 
         Date d = new Date();
 
@@ -150,11 +149,11 @@ public class DLCService {
         return null;
     }
 
-    public String validationDLCVR(DLCVR dlcvr){
+    public String validationDLCVR(DlcVR dlcvr){
         return validationDLCVRSecret(dlcvr);
     }
 
-    private String validationDLCVRSecret(DLCVR dlcvr){
+    private String validationDLCVRSecret(DlcVR dlcvr){
 
         Date d = new Date();
 
@@ -277,13 +276,13 @@ public class DLCService {
 
     }
 
-    public void updateDLCPC(DLCPC dlc, Long id){
+    public void updateDLCPC(DlcPC dlc, Long id){
 
-        Optional<DLCPC> enty = repositoryDPC.findById(id);
+        Optional<DlcPC> enty = repositoryDPC.findById(id);
 
         if(enty.isPresent()){
 
-            DLCPC entyUpdate = enty.get();
+            DlcPC entyUpdate = enty.get();
 
             entyUpdate.setOwnedGame(dlc.getOwnedGame());
             entyUpdate.setName(dlc.getName());
@@ -305,13 +304,13 @@ public class DLCService {
         }
     }
 
-    public void updateDLCVR(DLCVR dlc, Long id){
+    public void updateDLCVR(DlcVR dlc, Long id){
 
-        Optional<DLCVR> enty = repositoryDVR.findById(id);
+        Optional<DlcVR> enty = repositoryDVR.findById(id);
 
         if(enty.isPresent()){
 
-            DLCVR entyUpdate = enty.get();
+            DlcVR entyUpdate = enty.get();
 
             entyUpdate.setOwnedGame(dlc.getOwnedGame());
             entyUpdate.setName(dlc.getName());

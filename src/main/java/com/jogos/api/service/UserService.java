@@ -3,7 +3,6 @@ package com.jogos.api.service;
 import com.jogos.api.dto.UserDTO;
 import com.jogos.api.model.UserEntity;
 import com.jogos.api.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,10 +13,9 @@ import java.util.regex.Pattern;
 
 public class UserService {
 
-    @Autowired
-    private UserRepository userInterfaceRepo;
+    private final UserRepository userInterfaceRepo;
 
-    private UserEntity login = new UserEntity();
+    private final UserEntity login = new UserEntity();
 
     private static final String PASSWORD_PATTERN = "^.*(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%]).{6,}.*$";
 
@@ -26,19 +24,23 @@ public class UserService {
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
+    public UserService(UserRepository userInterfaceRepo) {
+        this.userInterfaceRepo = userInterfaceRepo;
+    }
 
-    public int signup(UserDTO user) {
+
+    public String signup(UserDTO user) {
 
         UserEntity entity = new UserEntity();
 
         if (!validateName(user.getName())) {
-            return 1;
+            return "Nome invalido";
         }
-        if (validateEmail(user.getEmail()) == 1) {
-            return 2;
+        if (!validateEmail(user.getEmail())) {
+            return "email invalido";
         }
-        if (validatePassword(user.getPassword()) == false) {
-            return 3;
+        if (!validatePassword(user.getPassword())) {
+            return "senha muito curta";
         }
 
         entity.setId(user.getId());
@@ -48,10 +50,10 @@ public class UserService {
 
         userInterfaceRepo.save(entity);
 
-        return 0;
+        return null;
     }
 
-    public int login(UserDTO user) {
+    public String login(UserDTO user) {
 
         String filter = user.getEmail() != null ? user.getEmail() : "";
         Optional<UserEntity> entity = userInterfaceRepo.findByEmailIgnoreCase(filter);
@@ -60,7 +62,7 @@ public class UserService {
             UserEntity enty = entity.get();
 
             if (!enty.getPassword().equals(user.getPassword())) {
-                return 1;
+                return "Login incorreto usuario não encontrado";
             }
 
             login.setId(enty.getId());
@@ -68,39 +70,36 @@ public class UserService {
             login.setEmail(enty.getEmail());
             login.setPassword(enty.getPassword());
 
-            return 2;
+            return null;
         } else {
-            return 3;
+            return "Login incorreto usuario não encontrado";
         }
 
     }
 
-    public int loginConferer() {
-
-        int retorno;
-
+    public int alternativeLoginConferer(){
         if(this.login.getEmail() == null){
             return 1;
-        }
-
-        retorno = ADMConferer();
-
-        if(retorno == 1){
-            return 2;
         }else{
             return 0;
         }
     }
 
-    public UserEntity converter(UserDTO dto) {
-        UserEntity entity = new UserEntity();
+    public String loginConferer(){
 
-        entity.setId(dto.getId());
-        entity.setName(dto.getName());
-        entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getPassword());
+        int retorno;
 
-        return entity;
+        if(this.login.getEmail() == null){
+            return "Login necessário";
+        }
+
+        retorno = ADMConferer();
+
+        if(retorno == 1){
+            return null;
+        }else{
+            return "Esse usuário não tem permissão para esse comando";
+        }
     }
 
     private boolean validatePassword(String senha) {
@@ -108,24 +107,15 @@ public class UserService {
         return matcher.matches();
     }
 
-    private int validateEmail(String email) {
+    private boolean validateEmail(String email) {
 
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
-
-        if (!matcher.find()) {
-            return 1;
-        }
-
-        return 0;
+        return matcher.matches();
     }
 
     private boolean validateName(String name) {
 
-        if (name.trim().equals("") || name.trim().split(" ").length < 2) {
-            return false;
-        } else {
-            return true;
-        }
+        return !name.trim().equals("") && name.trim().split(" ").length >= 2;
     }
 
     private int ADMConferer() {

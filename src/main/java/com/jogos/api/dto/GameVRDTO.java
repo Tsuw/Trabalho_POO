@@ -1,7 +1,6 @@
 package com.jogos.api.dto;
 
 import com.jogos.api.model.NeutralGame;
-import com.jogos.api.model.Requirements;
 
 import java.util.Date;
 

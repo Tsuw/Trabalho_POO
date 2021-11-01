@@ -1,12 +1,12 @@
 package com.jogos.api.repository;
 
-import com.jogos.api.model.DLCPC;
+import com.jogos.api.model.DlcPC;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface DLCPCRepository extends JpaRepository<DLCPC, Long> {
+public interface DLCPCRepository extends JpaRepository<DlcPC, Long> {
 
-    List<DLCPC> findByOwnedGame(String ownedGame);
+    List<DlcPC> findByOwnedGame(String ownedGame);
 
 }

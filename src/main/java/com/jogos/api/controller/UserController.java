@@ -1,58 +1,43 @@
 package com.jogos.api.controller;
 
 import com.jogos.api.dto.UserDTO;
-import com.jogos.api.repository.UserRepository;
 import com.jogos.api.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
 
-    @Autowired
-    private UserService service;
+    private final UserService service;
 
-    @Autowired
-    private UserRepository repo;
+    private String retorno;
+
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @PostMapping("/signup")
-    public String signup(@RequestBody UserDTO User) {
-        int retorno;
+    public ResponseEntity<String> signup(@RequestBody UserDTO User) {
 
-        retorno = service.signup(User);
+        this.retorno = service.signup(User);
 
-        if (retorno == 1) {
-            return "Nome invalido";
-        } else if (retorno == 2) {
-            return "email invalido";
-        } else if (retorno == 3) {
-            return "senha muito curta";
+        if(this.retorno != null){
+            return ResponseEntity.badRequest().body(this.retorno);
         }
 
-        return "Usuario adicionado";
+        return ResponseEntity.status(HttpStatus.OK).body("Usuario adicionado");
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserDTO User) {
+    public ResponseEntity<String> login(@RequestBody UserDTO User) {
 
-        int retorno;
+        this.retorno = service.login(User);
 
-        retorno = service.login(User);
-
-        if (retorno == 1 || retorno == 3) {
-            return "Login incorreto usuario não encontrado";
+        if (this.retorno != null) {
+            return ResponseEntity.badRequest().body(this.retorno);
         } else {
-            return "Login efetuado com sucesso";
+            return ResponseEntity.status(HttpStatus.OK).body("Login efetuado com sucesso");
         }
-
     }
-
-    @DeleteMapping("/deleteUsers")
-    public String deleteAll() {
-
-        repo.deleteAll();
-
-        return "apagou";
-    }
-
 }

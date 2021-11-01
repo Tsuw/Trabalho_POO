@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "DLCPC")
-public class DLCPC extends NeutralDLC{
+public class DlcPC extends NeutralDLC{
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "minimumRequirements",  nullable = false, referencedColumnName = "id")

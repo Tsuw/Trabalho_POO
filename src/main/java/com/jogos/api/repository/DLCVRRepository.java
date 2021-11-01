@@ -1,12 +1,12 @@
 package com.jogos.api.repository;
 
-import com.jogos.api.model.DLCVR;
+import com.jogos.api.model.DlcVR;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface DLCVRRepository extends JpaRepository<DLCVR, Long> {
+public interface DLCVRRepository extends JpaRepository<DlcVR, Long> {
 
-    List<DLCVR> findByOwnedGame(String ownedGame);
+    List<DlcVR> findByOwnedGame(String ownedGame);
 
 }

@@ -10,7 +10,6 @@ import com.jogos.api.model.GameVR;
 import com.jogos.api.repository.GameConsoleRepository;
 import com.jogos.api.repository.GamePCRepository;
 import com.jogos.api.repository.GameVRRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,14 +21,19 @@ import java.util.Optional;
 
 public class GameService {
 
-    @Autowired
-    private GamePCRepository repositoryPC;
+    private final GamePCRepository repositoryPC;
 
-    @Autowired
-    private GameVRRepository repositoryVR;
+    private final GameVRRepository repositoryVR;
 
-    @Autowired
-    private GameConsoleRepository repositoryConsole;
+    private final GameConsoleRepository repositoryConsole;
+
+    private final Date d = new Date();
+
+    public GameService(GamePCRepository repositoryPC, GameVRRepository repositoryVR, GameConsoleRepository repositoryConsole) {
+        this.repositoryPC = repositoryPC;
+        this.repositoryVR = repositoryVR;
+        this.repositoryConsole = repositoryConsole;
+    }
 
     public List<GamePCDTO> getGamesPC(){
 
@@ -37,9 +41,7 @@ public class GameService {
 
         List<GamePC> games = repositoryPC.findAll();
 
-        for(int i = 0; i < games.size();i++){
-
-            GamePC tmp = games.get(i);
+        for (GamePC tmp : games) {
 
             GamePCDTO dto = new GamePCDTO(tmp);
             dto.setMinimumRequirements(new RequirementsDTO(tmp.getMinimumRequirements()));
@@ -55,9 +57,8 @@ public class GameService {
         List<GameVRDTO> listGame = new ArrayList<>();
         List<GameVR> games = repositoryVR.findAll();
 
-        for(int i = 0; i < games.size(); i++){
+        for (GameVR tmp : games) {
 
-            GameVR tmp = games.get(i);
             GameVRDTO dto = new GameVRDTO(tmp);
             dto.setMinimumRequirements(new RequirementsDTO(tmp.getMinimumRequirements()));
             dto.setRecommendedRequirements(new RequirementsDTO(tmp.getRecommendedRequirements()));
@@ -73,9 +74,8 @@ public class GameService {
         List<GameConsoleDTO> listGames = new ArrayList<>();
         List<GameConsole> games = repositoryConsole.findAll();
 
-        for(int i = 0; i < games.size(); i++){
+        for (GameConsole tmp : games) {
 
-            GameConsole tmp = games.get(i);
             GameConsoleDTO dto = new GameConsoleDTO(tmp);
             dto.setStorage(tmp.getStorage());
 
@@ -92,13 +92,11 @@ public class GameService {
 
     private String validationPCSecret (GamePC gamePC){
 
-        Date d = new Date();
-
         if(gamePC.getName() == null || gamePC.getName().isEmpty()){
             return "O jogo necessita de um nome";
         }
 
-        if(gamePC.getReleaseDate() == null || d.compareTo(gamePC.getReleaseDate()) < 0){
+        if(gamePC.getReleaseDate() == null || this.d.compareTo(gamePC.getReleaseDate()) < 0){
             return "Data invalida";
         }
 
@@ -156,13 +154,11 @@ public class GameService {
 
     private String validationVRSecret(GameVR gameVR){
 
-        Date d = new Date();
-
         if(gameVR.getName() == null || gameVR.getName().isEmpty()){
             return "O jogo necessita de um nome";
         }
 
-        if(gameVR.getReleaseDate() == null || d.compareTo(gameVR.getReleaseDate()) < 0){
+        if(gameVR.getReleaseDate() == null || this.d.compareTo(gameVR.getReleaseDate()) < 0){
             return "Data invalida";
         }
 
@@ -220,13 +216,11 @@ public class GameService {
 
     private String validationConsoleSecret(GameConsole gameConsole){
 
-        Date d = new Date();
-
         if(gameConsole.getName() == null || gameConsole.getName().isEmpty()){
             return "O jogo necessita de um nome";
         }
 
-        if(gameConsole.getReleaseDate() == null || d.compareTo(gameConsole.getReleaseDate()) < 0){
+        if(gameConsole.getReleaseDate() == null || this.d.compareTo(gameConsole.getReleaseDate()) < 0){
             return "Data invalida";
         }
 
@@ -357,5 +351,4 @@ public class GameService {
             repositoryConsole.save(entyUpdate);
         }
     }
-
 }

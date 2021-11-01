@@ -4,7 +4,7 @@ import com.jogos.api.model.NeutralDLC;
 
 import java.util.Date;
 
-public class DLCVRDTO {
+public class DlcPcDto {
 
     private String ownedGame;
     private String name;
@@ -20,7 +20,7 @@ public class DLCVRDTO {
     private RequirementsDTO minimumRequirements;
     private RequirementsDTO recommendedRequirements;
 
-    public DLCVRDTO(NeutralDLC enty) {
+    public DlcPcDto(NeutralDLC enty) {
         this.ownedGame = enty.getOwnedGame();
         this.name = enty.getName();
         this.releaseDate = enty.getReleaseDate();
