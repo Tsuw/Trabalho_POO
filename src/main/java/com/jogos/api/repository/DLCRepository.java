@@ -4,4 +4,7 @@ import com.jogos.api.model.Dlc;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DLCRepository extends JpaRepository<Dlc, Long> {
+
+    boolean existsByNameAndPlatform(String name, String platform);
+
 }

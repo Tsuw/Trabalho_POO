@@ -46,9 +46,6 @@ public class Game {
     @Column(name = "rating", nullable = false)
     private int rating;
 
-    @Column(name = "hasDLC", nullable = false)
-    private boolean hasDLC;
-
     @Column(name = "platform", nullable = false)
     private String platform;
 
@@ -71,7 +68,7 @@ public class Game {
     }
 
     public Game(String name, Date releaseDate, String description, String developer, int peopleInvolved, int soldCopies,
-                String distributor, int score, Double price, String genre, int rating, boolean hasDLC, String platform,
+                String distributor, int score, Double price, String genre, int rating, String platform,
                 Requirements minimumRequirements, Requirements recommendedRequirements, String storage, List<Dlc> dlc) {
         this.name = name;
         this.releaseDate = releaseDate;
@@ -84,7 +81,6 @@ public class Game {
         this.price = price;
         this.genre = genre;
         this.rating = rating;
-        this.hasDLC = hasDLC;
         this.platform = platform;
         this.minimumRequirements = minimumRequirements;
         this.recommendedRequirements = recommendedRequirements;
@@ -186,14 +182,6 @@ public class Game {
 
     public void setRating(int rating) {
         this.rating = rating;
-    }
-
-    public boolean isHasDLC() {
-        return hasDLC;
-    }
-
-    public void setHasDLC(boolean hasDLC) {
-        this.hasDLC = hasDLC;
     }
 
     public String getPlatform() {

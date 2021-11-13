@@ -20,7 +20,6 @@ public class GameConsoleDTO extends NeutralGDTO{
         this.price = game.getPrice();
         this.genre = game.getGenre();
         this.rating = game.getRating();
-        this.hasDLC = game.isHasDLC();
         this.platform = game.getPlatform();
         this.storage = game.getStorage();
     }

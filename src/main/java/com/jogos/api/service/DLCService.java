@@ -146,6 +146,10 @@ public class DLCService {
 
         Date d = new Date();
 
+        if(dlcRepository.existsByNameAndPlatform(dlc.getName(), dlc.getPlatform())){
+            return "DLC já existente";
+        }
+
         if(dlc.getOwnedGame() == null || dlc.getOwnedGame().isEmpty()){
             return "A DLC necessita do jogo de origem";
         }

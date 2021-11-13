@@ -15,4 +15,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     List<Game> findAllByConsole();
 
     Optional<Game> findGameByNameAndPlatform(String name, String platform);
+
+    boolean existsByNameAndPlatform(String name, String platform);
 }

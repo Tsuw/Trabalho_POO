@@ -38,7 +38,6 @@ public class GameService {
                     .withPrice(game.getPrice())
                     .withGenre(game.getGenre())
                     .withRating(game.getRating())
-                    .withHasDLC(game.isHasDLC())
                     .withPlatform(game.getPlatform())
                     .withMinimumRequirements(game.getMinimumRequirements())
                     .withRecommendedRequirements(game.getRecommendedRequirements())
@@ -66,7 +65,6 @@ public class GameService {
                     .withPrice(game.getPrice())
                     .withGenre(game.getGenre())
                     .withRating(game.getRating())
-                    .withHasDLC(game.isHasDLC())
                     .withPlatform(game.getPlatform())
                     .withPeopleInvolved(game.getPeopleInvolved())
                     .withSoldCopies(game.getSoldCopies())
@@ -93,7 +91,6 @@ public class GameService {
                     .withPrice(game.getPrice())
                     .withGenre(game.getGenre())
                     .withRating(game.getRating())
-                    .withHasDLC(game.isHasDLC())
                     .withPlatform(game.getPlatform())
                     .withPeopleInvolved(game.getPeopleInvolved())
                     .withSoldCopies(game.getSoldCopies())
@@ -113,6 +110,10 @@ public class GameService {
     private String validation(Game game){
 
         Date d = new Date();
+
+        if(repository.existsByNameAndPlatform(game.getName(), game.getPlatform())){
+            return "Jogo já existente";
+        }
 
         if(game.getName() == null || game.getName().isEmpty()){
             return "O jogo necessita de um nome";
@@ -208,7 +209,6 @@ public class GameService {
             entyUpdate.setPrice(game.getPrice());
             entyUpdate.setGenre(game.getGenre());
             entyUpdate.setRating(game.getRating());
-            entyUpdate.setHasDLC(game.isHasDLC());
             entyUpdate.setPlatform(game.getPlatform());
             entyUpdate.setMinimumRequirements(game.getMinimumRequirements());
             entyUpdate.setRecommendedRequirements(game.getRecommendedRequirements());

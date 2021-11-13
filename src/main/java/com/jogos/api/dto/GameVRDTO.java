@@ -21,7 +21,6 @@ public class GameVRDTO extends NeutralGDTO{
         this.price = game.getPrice();
         this.genre = game.getGenre();
         this.rating = game.getRating();
-        this.hasDLC = game.isHasDLC();
         this.platform = game.getPlatform();
         this.minimumRequirements = new RequirementsDTO(game.getMinimumRequirements());
         this.recommendedRequirements = new RequirementsDTO(game.getRecommendedRequirements());

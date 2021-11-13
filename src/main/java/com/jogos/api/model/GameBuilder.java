@@ -15,7 +15,6 @@ public class GameBuilder {
     private Double price;
     private String genre;
     private int rating;
-    private boolean hasDLC;
     private String platform;
     private Requirements minimumRequirements;
     private Requirements recommendedRequirements;
@@ -85,11 +84,6 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder withHasDLC(boolean hasDLC){
-        this.hasDLC = hasDLC;
-        return this;
-    }
-
     public GameBuilder withPlatform(String platform){
         this.platform = platform;
         return this;
@@ -112,6 +106,6 @@ public class GameBuilder {
 
     public Game build(){
         return new Game(name, releaseDate, description, developer, peopleInvolved, soldCopies, distributor,
-                score, price, genre, rating, hasDLC, platform, minimumRequirements, recommendedRequirements, storage, dlc);
+                score, price, genre, rating, platform, minimumRequirements, recommendedRequirements, storage, dlc);
     }
 }
