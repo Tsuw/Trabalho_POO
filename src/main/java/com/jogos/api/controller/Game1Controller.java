@@ -9,7 +9,7 @@ import com.jogos.api.model.GameVR;
 import com.jogos.api.repository.GameConsoleRepository;
 import com.jogos.api.repository.GamePCRepository;
 import com.jogos.api.repository.GameVRRepository;
-import com.jogos.api.service.GameService;
+import com.jogos.api.service.Game1Service;
 import com.jogos.api.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class GameController {
+public class Game1Controller {
 
-    private final GameService service;
+    private final Game1Service service;
 
     private final UserService userService;
 
@@ -33,7 +33,7 @@ public class GameController {
 
     private String retorno;
 
-    public GameController(GameService service, UserService userService, GamePCRepository repositoryPC, GameVRRepository repositoryVR, GameConsoleRepository repositoryConsole) {
+    public Game1Controller(Game1Service service, UserService userService, GamePCRepository repositoryPC, GameVRRepository repositoryVR, GameConsoleRepository repositoryConsole) {
         this.service = service;
         this.userService = userService;
         this.repositoryPC = repositoryPC;

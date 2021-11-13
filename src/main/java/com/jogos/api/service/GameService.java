@@ -1,354 +1,227 @@
 package com.jogos.api.service;
 
-import com.jogos.api.dto.GameConsoleDTO;
-import com.jogos.api.dto.GamePCDTO;
-import com.jogos.api.dto.GameVRDTO;
-import com.jogos.api.dto.RequirementsDTO;
-import com.jogos.api.model.GameConsole;
-import com.jogos.api.model.GamePC;
-import com.jogos.api.model.GameVR;
-import com.jogos.api.repository.GameConsoleRepository;
-import com.jogos.api.repository.GamePCRepository;
-import com.jogos.api.repository.GameVRRepository;
+import com.jogos.api.model.Game;
+import com.jogos.api.model.GameBuilder;
+import com.jogos.api.repository.GameRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 
 public class GameService {
 
-    private final GamePCRepository repositoryPC;
+    private final GameRepository repository;
 
-    private final GameVRRepository repositoryVR;
-
-    private final GameConsoleRepository repositoryConsole;
-
-    private final Date d = new Date();
-
-    public GameService(GamePCRepository repositoryPC, GameVRRepository repositoryVR, GameConsoleRepository repositoryConsole) {
-        this.repositoryPC = repositoryPC;
-        this.repositoryVR = repositoryVR;
-        this.repositoryConsole = repositoryConsole;
+    public GameService(GameRepository repository) {
+        this.repository = repository;
     }
 
-    public List<GamePCDTO> getGamesPC(){
+    public String post(Game game){
 
-        List<GamePCDTO> listGames = new ArrayList<>();
+        String erro = validation(game);
 
-        List<GamePC> games = repositoryPC.findAll();
+        GameBuilder builder = new GameBuilder();
 
-        for (GamePC tmp : games) {
+        if(game.getPlatform().equals("PC") || game.getPlatform().equals("pc")){
 
-            GamePCDTO dto = new GamePCDTO(tmp);
-            dto.setMinimumRequirements(new RequirementsDTO(tmp.getMinimumRequirements()));
-            dto.setRecommendedRequirements(new RequirementsDTO(tmp.getRecommendedRequirements()));
+            Game gamePC = builder.withName(game.getName())
+                    .withReleaseDate(game.getReleaseDate())
+                    .withDescription(game.getDescription())
+                    .withDeveloper(game.getDeveloper())
+                    .withDistributor(game.getDistributor())
+                    .withScore(game.getScore())
+                    .withPrice(game.getPrice())
+                    .withGenre(game.getGenre())
+                    .withRating(game.getRating())
+                    .withHasDLC(game.isHasDLC())
+                    .withPlatform(game.getPlatform())
+                    .withMinimumRequirements(game.getMinimumRequirements())
+                    .withRecommendedRequirements(game.getRecommendedRequirements())
+                    .build();
 
-            listGames.add(dto);
+            if(erro == null){
+
+                repository.save(gamePC);
+                return "Jogo adicionado com sucesso";
+            }else{
+                return erro;
+            }
+
+
+        }else if(game.getPlatform().equals("VR") || game.getPlatform().equals("vr")){
+
+            Game gameVR = builder.withName(game.getName())
+                    .withReleaseDate(game.getReleaseDate())
+                    .withDescription(game.getDescription())
+                    .withDeveloper(game.getDeveloper())
+                    .withDistributor(game.getDistributor())
+                    .withScore(game.getScore())
+                    .withPrice(game.getPrice())
+                    .withGenre(game.getGenre())
+                    .withRating(game.getRating())
+                    .withHasDLC(game.isHasDLC())
+                    .withPlatform(game.getPlatform())
+                    .withMinimumRequirements(game.getMinimumRequirements())
+                    .withRecommendedRequirements(game.getRecommendedRequirements())
+                    .build();
+
+            if(erro == null){
+                repository.save(gameVR);
+                return "Jogo adicionado com sucesso";
+            }else{
+                return erro;
+            }
+
+        }else{
+
+            Game gameConsole = builder.withName(game.getName())
+                    .withReleaseDate(game.getReleaseDate())
+                    .withDescription(game.getDescription())
+                    .withDeveloper(game.getDeveloper())
+                    .withDistributor(game.getDistributor())
+                    .withScore(game.getScore())
+                    .withPrice(game.getPrice())
+                    .withGenre(game.getGenre())
+                    .withRating(game.getRating())
+                    .withHasDLC(game.isHasDLC())
+                    .withPlatform(game.getPlatform())
+                    .withStorage(game.getStorage())
+                    .build();
+
+            if(erro == null){
+                repository.save(gameConsole);
+                return "Jogo adicionado com sucesso";
+            }else{
+                return erro;
+            }
         }
-        return listGames;
+
     }
 
-    public List<GameVRDTO> getGamesVR(){
+    private String validation(Game game){
 
-        List<GameVRDTO> listGame = new ArrayList<>();
-        List<GameVR> games = repositoryVR.findAll();
+        Date d = new Date();
 
-        for (GameVR tmp : games) {
-
-            GameVRDTO dto = new GameVRDTO(tmp);
-            dto.setMinimumRequirements(new RequirementsDTO(tmp.getMinimumRequirements()));
-            dto.setRecommendedRequirements(new RequirementsDTO(tmp.getRecommendedRequirements()));
-
-            listGame.add(dto);
-        }
-
-        return listGame;
-    }
-
-    public List<GameConsoleDTO> getGamesConsole(){
-
-        List<GameConsoleDTO> listGames = new ArrayList<>();
-        List<GameConsole> games = repositoryConsole.findAll();
-
-        for (GameConsole tmp : games) {
-
-            GameConsoleDTO dto = new GameConsoleDTO(tmp);
-            dto.setStorage(tmp.getStorage());
-
-            listGames.add(dto);
-        }
-
-        return listGames;
-    }
-
-    public String validationPC(GamePC gamePC){
-
-        return validationPCSecret(gamePC);
-    }
-
-    private String validationPCSecret (GamePC gamePC){
-
-        if(gamePC.getName() == null || gamePC.getName().isEmpty()){
+        if(game.getName() == null || game.getName().isEmpty()){
             return "O jogo necessita de um nome";
         }
 
-        if(gamePC.getReleaseDate() == null || this.d.compareTo(gamePC.getReleaseDate()) < 0){
+        if(game.getReleaseDate() == null || d.compareTo(game.getReleaseDate()) < 0){
             return "Data invalida";
         }
 
-        if(gamePC.getDescription() == null || gamePC.getDescription().isEmpty()){
+        if(game.getDescription() == null || game.getDescription().isEmpty()){
             return "O jogo necessita de uma descrição";
         }
 
-        if(gamePC.getDeveloper() == null || gamePC.getDeveloper().isEmpty()){
+        if(game.getDeveloper() == null || game.getDeveloper().isEmpty()){
             return "O jogo necessita de um desenvolvedor";
         }
 
-        if(gamePC.getPeopleInvolved() < 0){
+        if(game.getPeopleInvolved() < 0){
             return "Número de pessoas invalido";
         }
 
-        if(gamePC.getSoldCopies() < 0){
+        if(game.getSoldCopies() < 0){
             return "Número de copias invalido";
         }
 
-        if(gamePC.getDistributor() == null || gamePC.getDistributor().isEmpty()){
+        if(game.getDistributor() == null || game.getDistributor().isEmpty()){
             return "O jogo necessita de um Distribuidor";
         }
 
-        if(gamePC.getScore() < 0 || gamePC.getScore() > 100){
+        if(game.getScore() < 0 || game.getScore() > 100){
             return "Nota invalida";
         }
 
-        if(gamePC.getPrice() < 0){
+        if(game.getPrice() < 0){
             return "Preço invalido";
         }
 
-        if(gamePC.getGenre() == null || gamePC.getGenre().isEmpty()){
+        if(game.getGenre() == null || game.getGenre().isEmpty()){
             return "O jogo necessita de um gênero";
         }
 
-        if(gamePC.getRating() > 21 || gamePC.getRating() < 0){
+        if(game.getRating() > 21 || game.getRating() < 0){
             return "Faixa etária invalida";
         }
 
-        if(gamePC.getMinimumRequirements() == null){
-            return "O jogo necessita de requisitos minimos";
+        if(game.getPlatform() == null || game.getPlatform().isEmpty()){
+            return "O jogo necessita de uma plataforma";
         }
 
-        if(gamePC.getRecommendedRequirements() == null){
-            return "O jogo necessita de requisitos recomendados";
+        if(game.getPlatform().equals("VR") || game.getPlatform().equals("vr") ||
+                game.getPlatform().equals("PC") || game.getPlatform().equals("pc")){
+
+            if(game.getMinimumRequirements() == null){
+                return "O jogo necessita de requisitos minimos";
+            }
+
+            if(game.getRecommendedRequirements() == null){
+                return "O jogo necessita de requisitos recomendados";
+            }
+
+        }else{
+
+            if(game.getStorage() == null || game.getStorage().isEmpty()){
+                return "O jogo precisa de um valor de armazenamento";
+            }
+
         }
 
         return null;
     }
 
-    public String validationVR(GameVR gameVR){
+    public String update(Game game, Long id){
 
-        return validationVRSecret(gameVR);
-    }
+        Optional<Game> enty = repository.findById(id);
+        String erro = validation(game);
 
-    private String validationVRSecret(GameVR gameVR){
-
-        if(gameVR.getName() == null || gameVR.getName().isEmpty()){
-            return "O jogo necessita de um nome";
+        if(erro != null){
+            return erro;
         }
-
-        if(gameVR.getReleaseDate() == null || this.d.compareTo(gameVR.getReleaseDate()) < 0){
-            return "Data invalida";
-        }
-
-        if(gameVR.getDescription() == null || gameVR.getDescription().isEmpty()){
-            return "O jogo necessita de uma descrição";
-        }
-
-        if(gameVR.getDeveloper() == null || gameVR.getDeveloper().isEmpty()){
-            return "O jogo necessita de um desenvolvedor";
-        }
-
-        if(gameVR.getPeopleInvolved() < 0){
-            return "Número de pessoas invalido";
-        }
-
-        if(gameVR.getSoldCopies() < 0){
-            return "Número de copias invalido";
-        }
-
-        if(gameVR.getDistributor() == null || gameVR.getDistributor().isEmpty()){
-            return "O jogo necessita de um Distribuidor";
-        }
-
-        if(gameVR.getScore() < 0 || gameVR.getScore() > 100){
-            return "Nota invalida";
-        }
-
-        if(gameVR.getPrice() < 0){
-            return "Preço invalido";
-        }
-
-        if(gameVR.getGenre() == null || gameVR.getGenre().isEmpty()){
-            return "O jogo necessita de um gênero";
-        }
-
-        if(gameVR.getRating() > 21 || gameVR.getRating() < 0){
-            return "Faixa etária invalida";
-        }
-
-        if(gameVR.getMinimumRequirements() == null){
-            return "O jogo necessita de requisitos minimos";
-        }
-
-        if(gameVR.getRecommendedRequirements() == null){
-            return "O jogo necessita de requisitos recomendados";
-        }
-
-        return null;
-
-    }
-    public String validationConsole(GameConsole gameConsole){
-
-        return validationConsoleSecret(gameConsole);
-    }
-
-    private String validationConsoleSecret(GameConsole gameConsole){
-
-        if(gameConsole.getName() == null || gameConsole.getName().isEmpty()){
-            return "O jogo necessita de um nome";
-        }
-
-        if(gameConsole.getReleaseDate() == null || this.d.compareTo(gameConsole.getReleaseDate()) < 0){
-            return "Data invalida";
-        }
-
-        if(gameConsole.getDescription() == null || gameConsole.getDescription().isEmpty()){
-            return "O jogo necessita de uma descrição";
-        }
-
-        if(gameConsole.getDeveloper() == null || gameConsole.getDeveloper().isEmpty()){
-            return "O jogo necessita de um desenvolvedor";
-        }
-
-        if(gameConsole.getPeopleInvolved() < 0){
-            return "Número de pessoas invalido";
-        }
-
-        if(gameConsole.getSoldCopies() < 0){
-            return "Número de copias invalido";
-        }
-
-        if(gameConsole.getDistributor() == null || gameConsole.getDistributor().isEmpty()){
-            return "O jogo necessita de um Distribuidor";
-        }
-
-        if(gameConsole.getScore() < 0 || gameConsole.getScore() > 100){
-            return "Nota invalida";
-        }
-
-        if(gameConsole.getPrice() < 0){
-            return "Preço invalido";
-        }
-
-        if(gameConsole.getGenre() == null || gameConsole.getGenre().isEmpty()){
-            return "O jogo necessita de um gênero";
-        }
-
-        if(gameConsole.getRating() > 21 || gameConsole.getRating() < 0){
-            return "Faixa etária invalida";
-        }
-
-        if(gameConsole.getStorage() == null || gameConsole.getStorage().isEmpty()){
-            return "O jogo precisa de um valor de armazenamento";
-        }
-
-        return null;
-    }
-
-    public void updateGamePC(Long id, GamePC entity){
-
-        Optional<GamePC> enty = repositoryPC.findById(id);
 
         if(enty.isPresent()){
 
-            GamePC entyUpdate = enty.get();
+            Game entyUpdate = enty.get();
 
-            entyUpdate.setName(entity.getName());
-            entyUpdate.setReleaseDate(entity.getReleaseDate());
-            entyUpdate.setDescription(entity.getDescription());
-            entyUpdate.setDeveloper(entity.getDeveloper());
-            entyUpdate.setPeopleInvolved(entity.getPeopleInvolved());
-            entyUpdate.setSoldCopies(entity.getSoldCopies());
-            entyUpdate.setDistributor(entity.getDistributor());
-            entyUpdate.setScore(entity.getScore());
-            entyUpdate.setPrice(entyUpdate.getPrice());
-            entyUpdate.setGenre(entity.getGenre());
-            entyUpdate.setRating(entity.getRating());
-            entyUpdate.setHasDLC(entity.isHasDLC());
-            entyUpdate.setPlatform(entity.getPlatform());
-            entyUpdate.setMinimumRequirements(entity.getMinimumRequirements());
-            entyUpdate.setRecommendedRequirements(entity.getRecommendedRequirements());
+            entyUpdate.setName(game.getName());
+            entyUpdate.setReleaseDate(game.getReleaseDate());
+            entyUpdate.setDescription(game.getDescription());
+            entyUpdate.setDeveloper(game.getDeveloper());
+            entyUpdate.setPeopleInvolved(game.getPeopleInvolved());
+            entyUpdate.setSoldCopies(game.getSoldCopies());
+            entyUpdate.setDistributor(game.getDistributor());
+            entyUpdate.setScore(game.getScore());
+            entyUpdate.setPrice(game.getPrice());
+            entyUpdate.setGenre(game.getGenre());
+            entyUpdate.setRating(game.getRating());
+            entyUpdate.setHasDLC(game.isHasDLC());
+            entyUpdate.setPlatform(game.getPlatform());
+            entyUpdate.setMinimumRequirements(game.getMinimumRequirements());
+            entyUpdate.setRecommendedRequirements(game.getRecommendedRequirements());
+            entyUpdate.setStorage(game.getStorage());
 
-            repositoryPC.save(entyUpdate);
-        }
+            repository.save(entyUpdate);
 
-    }
-
-    public void updateGameVR(Long id, GameVR entity){
-
-        Optional<GameVR> enty = repositoryVR.findById(id);
-
-        if(enty.isPresent()){
-
-            GameVR entyUpdate = enty.get();
-
-            entyUpdate.setName(entity.getName());
-            entyUpdate.setReleaseDate(entity.getReleaseDate());
-            entyUpdate.setDescription(entity.getDescription());
-            entyUpdate.setDeveloper(entity.getDeveloper());
-            entyUpdate.setPeopleInvolved(entity.getPeopleInvolved());
-            entyUpdate.setSoldCopies(entity.getSoldCopies());
-            entyUpdate.setDistributor(entity.getDistributor());
-            entyUpdate.setScore(entity.getScore());
-            entyUpdate.setPrice(entity.getPrice());
-            entyUpdate.setGenre(entity.getGenre());
-            entyUpdate.setRating(entity.getRating());
-            entyUpdate.setHasDLC(entity.isHasDLC());
-            entyUpdate.setPlatform(entity.getPlatform());
-            entyUpdate.setMinimumRequirements(entity.getMinimumRequirements());
-            entyUpdate.setRecommendedRequirements(entity.getRecommendedRequirements());
-
-            repositoryVR.save(entyUpdate);
-        }
-
-    }
-
-    public void updateGameConsole(Long id, GameConsole entity){
-
-        Optional<GameConsole> enty = repositoryConsole.findById(id);
-
-        if(enty.isPresent()){
-
-            GameConsole entyUpdate = enty.get();
-
-            entyUpdate.setName(entity.getName());
-            entyUpdate.setReleaseDate(entity.getReleaseDate());
-            entyUpdate.setDescription(entity.getDescription());
-            entyUpdate.setDeveloper(entity.getDeveloper());
-            entyUpdate.setPeopleInvolved(entity.getPeopleInvolved());
-            entyUpdate.setSoldCopies(entity.getSoldCopies());
-            entyUpdate.setDistributor(entity.getDistributor());
-            entyUpdate.setScore(entity.getScore());
-            entyUpdate.setPrice(entity.getPrice());
-            entyUpdate.setGenre(entity.getGenre());
-            entyUpdate.setRating(entity.getRating());
-            entyUpdate.setHasDLC(entity.isHasDLC());
-            entyUpdate.setPlatform(entity.getPlatform());
-            entyUpdate.setStorage(entity.getStorage());
-
-            repositoryConsole.save(entyUpdate);
+            return "Os dados foram atualizados com sucesso";
+        }else{
+            return "Jogo não existente";
         }
     }
+
+    public String delete(Long id){
+
+        if(repository.existsById(id)){
+
+            repository.deleteById(id);
+
+            return "Jogo deletado com sucesso";
+        }else{
+            return "Jogo não existente";
+        }
+    }
+
 }
