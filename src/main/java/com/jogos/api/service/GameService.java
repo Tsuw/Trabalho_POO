@@ -1,11 +1,14 @@
 package com.jogos.api.service;
 
+import com.jogos.api.dto.*;
 import com.jogos.api.model.Game;
 import com.jogos.api.model.GameBuilder;
 import com.jogos.api.repository.GameRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,10 +42,12 @@ public class GameService {
                     .withPlatform(game.getPlatform())
                     .withMinimumRequirements(game.getMinimumRequirements())
                     .withRecommendedRequirements(game.getRecommendedRequirements())
+                    .withPeopleInvolved(game.getPeopleInvolved())
+                    .withSoldCopies(game.getSoldCopies())
+                    .withDlc(game.getDlc())
                     .build();
 
             if(erro == null){
-
                 repository.save(gamePC);
                 return "Jogo adicionado com sucesso";
             }else{
@@ -63,8 +68,11 @@ public class GameService {
                     .withRating(game.getRating())
                     .withHasDLC(game.isHasDLC())
                     .withPlatform(game.getPlatform())
+                    .withPeopleInvolved(game.getPeopleInvolved())
+                    .withSoldCopies(game.getSoldCopies())
                     .withMinimumRequirements(game.getMinimumRequirements())
                     .withRecommendedRequirements(game.getRecommendedRequirements())
+                    .withDlc(game.getDlc())
                     .build();
 
             if(erro == null){
@@ -87,7 +95,10 @@ public class GameService {
                     .withRating(game.getRating())
                     .withHasDLC(game.isHasDLC())
                     .withPlatform(game.getPlatform())
+                    .withPeopleInvolved(game.getPeopleInvolved())
+                    .withSoldCopies(game.getSoldCopies())
                     .withStorage(game.getStorage())
+                    .withDlc(game.getDlc())
                     .build();
 
             if(erro == null){
@@ -97,7 +108,6 @@ public class GameService {
                 return erro;
             }
         }
-
     }
 
     private String validation(Game game){
@@ -222,6 +232,76 @@ public class GameService {
         }else{
             return "Jogo não existente";
         }
+    }
+
+    public List<GamePCDTO> getGamePC(){
+
+        List<GamePCDTO> listGames = new ArrayList<>();
+
+        List<Game> games = repository.findAllByPlatform("PC");
+
+        for (Game game : games) {
+
+            GamePCDTO dto = new GamePCDTO(game);
+
+            for(int i = 0; i < game.getDlc().size(); i++){
+
+                DlcPcDTO dto1 = new DlcPcDTO(game.getDlc().get(i));
+
+                dto.getDlc().add(dto1);
+
+            }
+
+            listGames.add(dto);
+        }
+
+        return listGames;
+    }
+
+    public List<GameVRDTO> getGameVR(){
+
+        List<GameVRDTO> listGames = new ArrayList<>();
+
+        List<Game> games = repository.findAllByPlatform("VR");
+
+        for(Game game : games){
+
+            GameVRDTO dto = new GameVRDTO(game);
+
+            for(int i = 0; i < games.size(); i++){
+
+                DlcVrDTO dto1 = new DlcVrDTO(game.getDlc().get(i));
+
+                dto.getDlc().add(dto1);
+            }
+
+            listGames.add(dto);
+        }
+
+        return listGames;
+    }
+
+    public List<GameConsoleDTO> getGameConsole(){
+
+        List<GameConsoleDTO> listGames = new ArrayList<>();
+
+        List<Game> games = repository.findAllByConsole();
+
+        for(Game game : games){
+
+            GameConsoleDTO dto = new GameConsoleDTO(game);
+
+            for(int i = 0; i < games.size(); i++){
+
+                DlcConsoleDTO dto1 = new DlcConsoleDTO(game.getDlc().get(i));
+
+                dto.getDlc().add(dto1);
+            }
+
+            listGames.add(dto);
+        }
+
+        return listGames;
     }
 
 }

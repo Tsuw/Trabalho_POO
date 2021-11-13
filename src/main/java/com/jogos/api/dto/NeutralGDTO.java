@@ -1,61 +1,20 @@
-package com.jogos.api.model;
+package com.jogos.api.dto;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@MappedSuperclass
-public abstract class NeutralGame {
-    @Id
-    @Column(name = "ID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+public abstract class NeutralGDTO {
 
-    @Column(name = "name", nullable = false)
     protected String name;
-
-    @Column(name = "releaseDate", nullable = false)
     protected Date releaseDate;
-
-    @Column(name = "description", nullable = false)
     protected String description;
-
-    @Column(name = "developer", nullable = false)
     protected String developer;
-
-    @Column(name = "peopleInvolved", nullable = false)
-    protected int peopleInvolved;
-
-    @Column(name = "soldCopies", nullable = false)
-    protected int soldCopies;
-
-    @Column(name = "distributor", nullable = false)
     protected String distributor;
-
-    @Column(name = "score", nullable = false)
     protected int score;
-
-    @Column(name = "price", nullable = false, scale = 2)
     protected Double price;
-
-    @Column(name = "genre", nullable = false)
     protected String genre;
-
-    @Column(name = "rating", nullable = false)
     protected int rating;
-
-    @Column(name = "hasDLC")
     protected boolean hasDLC;
-
-    @Column(name = "platform")
     protected String platform;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -87,22 +46,6 @@ public abstract class NeutralGame {
 
     public void setDeveloper(String developer) {
         this.developer = developer;
-    }
-
-    public int getPeopleInvolved() {
-        return peopleInvolved;
-    }
-
-    public void setPeopleInvolved(int peopleInvolved) {
-        this.peopleInvolved = peopleInvolved;
-    }
-
-    public int getSoldCopies() {
-        return soldCopies;
-    }
-
-    public void setSoldCopies(int soldCopies) {
-        this.soldCopies = soldCopies;
     }
 
     public String getDistributor() {

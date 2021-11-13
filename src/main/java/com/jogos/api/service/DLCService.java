@@ -1,290 +1,238 @@
 package com.jogos.api.service;
 
-import com.jogos.api.dto.DLCConsoleDTO;
-import com.jogos.api.dto.DlcPcDto;
-import com.jogos.api.dto.DlcVrDto;
-import com.jogos.api.dto.RequirementsDTO;
-import com.jogos.api.model.*;
-import com.jogos.api.repository.*;
+import com.jogos.api.model.Dlc;
+import com.jogos.api.model.DlcBuilder;
+import com.jogos.api.model.Game;
+import com.jogos.api.repository.DLCRepository;
+import com.jogos.api.repository.GameRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
-
 public class DLCService {
 
-    private final DLCPCRepository repositoryDPC;
+    private final DLCRepository dlcRepository;
 
-    private final DLCVRRepository repositoryDVR;
+    private final GameRepository gameRepository;
 
-    private final DLCConsoleRepository repositoryDConsole;
-
-    public DLCService(DLCPCRepository repositoryDPC, DLCVRRepository repositoryDVR, DLCConsoleRepository repositoryDConsole) {
-        this.repositoryDPC = repositoryDPC;
-        this.repositoryDVR = repositoryDVR;
-        this.repositoryDConsole = repositoryDConsole;
+    public DLCService(DLCRepository dlcRepository, GameRepository gameRepository) {
+        this.dlcRepository = dlcRepository;
+        this.gameRepository = gameRepository;
     }
 
-    public List<DlcPcDto> getDLCPC(String ownedGameName){
+    public String post(Dlc dlc){
 
-        List<DlcPcDto> list = new ArrayList<>();
-        List<DlcPC> listDLC = repositoryDPC.findByOwnedGame(ownedGameName);
+        String erro = validation(dlc);
 
-        for (DlcPC enty : listDLC) {
+        DlcBuilder builder = new DlcBuilder();
 
-            DlcPcDto dto = new DlcPcDto(enty);
+        Optional<Game> game = gameRepository.findGameByNameAndPlatform(dlc.getOwnedGame(), dlc.getPlatform());
 
-            dto.setMinimumRequirements(new RequirementsDTO(enty.getMinimumRequirements()));
-            dto.setRecommendedRequirements(new RequirementsDTO(enty.getRecommendedRequirements()));
+        if(dlc.getPlatform().equals("PC") || dlc.getPlatform().equals("pc")) {
 
-            list.add(dto);
+            Dlc dlcPC = builder.withName(dlc.getName())
+                    .withReleaseDate(dlc.getReleaseDate())
+                    .withDescription(dlc.getDescription())
+                    .withDeveloper(dlc.getDeveloper())
+                    .withDistributor(dlc.getDistributor())
+                    .withScore(dlc.getScore())
+                    .withPrice(dlc.getPrice())
+                    .withRating(dlc.getRating())
+                    .withPlatform(dlc.getPlatform())
+                    .withOwnedGame(dlc.getOwnedGame())
+                    .withMinimumRequirements(dlc.getMinimumRequirements())
+                    .withRecommendedRequirements(dlc.getRecommendedRequirements())
+                    .withPeopleInvolved(dlc.getPeopleInvolved())
+                    .withSoldCopies(dlc.getSoldCopies())
+                    .build();
+
+            if(erro == null){
+
+                if(game.isPresent()){
+
+                    Game entGame = game.get();
+
+                    entGame.getDlc().add(dlc);
+
+                    dlcRepository.save(dlc);
+
+                    return "DLC adicionada com sucesso";
+                }else{
+                    return "Jogo não encontrado";
+                }
+
+            }else{
+                return erro;
+            }
+
+        }else if(dlc.getPlatform().equals("VR") || dlc.getPlatform().equals("vr")){
+
+            Dlc dlcVR = builder.withName(dlc.getName())
+                    .withReleaseDate(dlc.getReleaseDate())
+                    .withDescription(dlc.getDescription())
+                    .withDeveloper(dlc.getDeveloper())
+                    .withDistributor(dlc.getDistributor())
+                    .withScore(dlc.getScore())
+                    .withPrice(dlc.getPrice())
+                    .withRating(dlc.getRating())
+                    .withPlatform(dlc.getPlatform())
+                    .withOwnedGame(dlc.getOwnedGame())
+                    .withMinimumRequirements(dlc.getMinimumRequirements())
+                    .withRecommendedRequirements(dlc.getRecommendedRequirements())
+                    .withPeopleInvolved(dlc.getPeopleInvolved())
+                    .withSoldCopies(dlc.getSoldCopies())
+                    .build();
+
+            if(erro == null){
+
+                if(game.isPresent()){
+
+                    Game entGame = game.get();
+
+                    entGame.getDlc().add(dlc);
+
+                    dlcRepository.save(dlc);
+
+                    return "DLC adicionada com sucesso";
+                }else{
+                    return "Jogo não encontrado";
+                }
+
+            }else{
+                return erro;
+            }
+
+        }else{
+
+            Dlc dlcConsole = builder.withName(dlc.getName())
+                    .withReleaseDate(dlc.getReleaseDate())
+                    .withDescription(dlc.getDescription())
+                    .withDeveloper(dlc.getDeveloper())
+                    .withDistributor(dlc.getDistributor())
+                    .withScore(dlc.getScore())
+                    .withPrice(dlc.getPrice())
+                    .withRating(dlc.getRating())
+                    .withPlatform(dlc.getPlatform())
+                    .withPeopleInvolved(dlc.getPeopleInvolved())
+                    .withSoldCopies(dlc.getSoldCopies())
+                    .withOwnedGame(dlc.getOwnedGame())
+                    .withStorage(dlc.getStorage())
+                    .build();
+
+            if(erro == null){
+
+                if(game.isPresent()){
+
+                    Game entGame = game.get();
+
+                    entGame.getDlc().add(dlc);
+
+                    dlcRepository.save(dlc);
+
+                    return "DLC adicionada com sucesso";
+                }else{
+                    return "Jogo não encontrado";
+                }
+
+            }else{
+                return erro;
+            }
         }
-
-        return list;
     }
 
-    public List<DlcVrDto> getDLCVR(String ownedGameName){
-
-        List<DlcVrDto> listGame = new ArrayList<>();
-        List<DlcVR> listDLC = repositoryDVR.findByOwnedGame(ownedGameName);
-
-        for (DlcVR enty : listDLC) {
-
-            DlcVrDto dto = new DlcVrDto(enty);
-
-            dto.setMinimumRequirements(new RequirementsDTO(enty.getMinimumRequirements()));
-            dto.setRecommendedRequirements(new RequirementsDTO(enty.getRecommendedRequirements()));
-
-            listGame.add(dto);
-        }
-
-        return listGame;
-    }
-
-    public List<DLCConsoleDTO> getDLCConsele(String ownedGameName){
-
-        List<DLCConsoleDTO> listGame = new ArrayList<>();
-        List<DLCConsole> listDLC = repositoryDConsole.findByOwnedGame(ownedGameName);
-
-        for (DLCConsole enty : listDLC) {
-
-            DLCConsoleDTO dto = new DLCConsoleDTO(enty);
-
-            dto.setStorage(enty.getStorage());
-
-            listGame.add(dto);
-        }
-
-        return listGame;
-    }
-
-    public String validationDLCPC(DlcPC dlcpc){
-        return validationDLCPCSecret(dlcpc);
-    }
-
-    private String validationDLCPCSecret(DlcPC dlcpc){
+    private String validation(Dlc dlc){
 
         Date d = new Date();
 
-        if(dlcpc.getOwnedGame() == null || dlcpc.getOwnedGame().isEmpty()){
-            return "A DLC necessita do nome do jogo de origem";
+        if(dlc.getOwnedGame() == null || dlc.getOwnedGame().isEmpty()){
+            return "A DLC necessita do jogo de origem";
         }
 
-        if(dlcpc.getName() == null || dlcpc.getName().isEmpty()){
+        if(dlc.getName() == null || dlc.getName().isEmpty()){
             return "A DLC necessita de um nome";
         }
 
-        if(dlcpc.getReleaseDate() == null || d.compareTo(dlcpc.getReleaseDate()) < 0){
+        if(dlc.getReleaseDate() == null || d.compareTo(dlc.getReleaseDate()) < 0){
             return "Data invalida";
         }
 
-        if(dlcpc.getDescription() == null || dlcpc.getDescription().isEmpty()){
+        if(dlc.getDescription() == null || dlc.getDescription().isEmpty()){
             return "A DLC necessita de uma descrição";
         }
 
-        if(dlcpc.getDeveloper() == null || dlcpc.getDeveloper().isEmpty()){
+        if(dlc.getDeveloper() == null || dlc.getDeveloper().isEmpty()){
             return "A DLC necessita de um desenvolvedor";
         }
 
-        if(dlcpc.getPeopleInvolved() < 0){
+        if(dlc.getPeopleInvolved() < 0){
             return "Número de pessoas invalido";
         }
 
-        if(dlcpc.getSoldCopies() < 0){
+        if(dlc.getSoldCopies() < 0){
             return "Número de copias invalido";
         }
 
-        if(dlcpc.getDistributor() == null || dlcpc.getDistributor().isEmpty()){
+        if(dlc.getDistributor() == null || dlc.getDistributor().isEmpty()){
             return "A DLC necessita de um Distribuidor";
         }
 
-        if(dlcpc.getScore() < 0 || dlcpc.getScore() > 100){
+        if(dlc.getScore() < 0 || dlc.getScore() > 100){
             return "Nota invalida";
         }
 
-        if(dlcpc.getPrice() < 0){
+        if(dlc.getPrice() < 0){
             return "Preço invalido";
         }
 
-        if(dlcpc.getGenre() == null || dlcpc.getGenre().isEmpty()){
+        if(dlc.getGenre() == null || dlc.getGenre().isEmpty()){
             return "A DLC necessita de um gênero";
         }
 
-        if(dlcpc.getRating() > 21 || dlcpc.getRating() < 0){
+        if(dlc.getRating() > 21 || dlc.getRating() < 0){
             return "Faixa etária invalida";
         }
 
-        if(dlcpc.getMinimumRequirements() == null){
-            return "A DLC necessita de requisitos minimos";
+        if(dlc.getPlatform() == null || dlc.getPlatform().isEmpty()){
+            return "A DLC necessita de uma plataforma";
         }
 
-        if(dlcpc.getRecommendedRequirements() == null){
-            return "A DLC necessita de requisitos recomendados";
+        if(dlc.getPlatform().equals("VR") || dlc.getPlatform().equals("vr") ||
+                dlc.getPlatform().equals("PC") || dlc.getPlatform().equals("pc")){
+
+            if(dlc.getMinimumRequirements() == null){
+                return "A DLC necessita de requisitos minimos";
+            }
+
+            if(dlc.getRecommendedRequirements() == null){
+                return "A DLC necessita de requisitos recomendados";
+            }
+
+        }else{
+
+            if(dlc.getStorage() == null || dlc.getStorage().isEmpty()){
+                return "A DLC precisa de um valor de armazenamento";
+            }
+
         }
 
         return null;
     }
 
-    public String validationDLCVR(DlcVR dlcvr){
-        return validationDLCVRSecret(dlcvr);
-    }
+    public String update(Dlc dlc, Long id){
 
-    private String validationDLCVRSecret(DlcVR dlcvr){
+        Optional<Dlc> enty = dlcRepository.findById(id);
+        String erro = validation(dlc);
 
-        Date d = new Date();
-
-        if(dlcvr.getOwnedGame() == null || dlcvr.getOwnedGame().isEmpty()){
-            return "A DLC necessita do nome do jogo de origem";
+        if(erro != null){
+            return erro;
         }
-
-        if(dlcvr.getName() == null || dlcvr.getName().isEmpty()){
-            return "A DLC necessita de um nome";
-        }
-
-        if(dlcvr.getReleaseDate() == null || d.compareTo(dlcvr.getReleaseDate()) < 0){
-            return "Data invalida";
-        }
-
-        if(dlcvr.getDescription() == null || dlcvr.getDescription().isEmpty()){
-            return "A DLC necessita de uma descrição";
-        }
-
-        if(dlcvr.getDeveloper() == null || dlcvr.getDeveloper().isEmpty()){
-            return "A DLC necessita de um desenvolvedor";
-        }
-
-        if(dlcvr.getPeopleInvolved() < 0){
-            return "Número de pessoas invalido";
-        }
-
-        if(dlcvr.getSoldCopies() < 0){
-            return "Número de copias invalido";
-        }
-
-        if(dlcvr.getDistributor() == null || dlcvr.getDistributor().isEmpty()){
-            return "A DLC necessita de um Distribuidor";
-        }
-
-        if(dlcvr.getScore() < 0 || dlcvr.getScore() > 100){
-            return "Nota invalida";
-        }
-
-        if(dlcvr.getPrice() < 0){
-            return "Preço invalido";
-        }
-
-        if(dlcvr.getGenre() == null || dlcvr.getGenre().isEmpty()){
-            return "A DLC necessita de um gênero";
-        }
-
-        if(dlcvr.getRating() > 21 || dlcvr.getRating() < 0){
-            return "Faixa etária invalida";
-        }
-
-        if(dlcvr.getMinimumRequirements() == null){
-            return "A DLC necessita de requisitos minimos";
-        }
-
-        if(dlcvr.getRecommendedRequirements() == null){
-            return "A DLC necessita de requisitos recomendados";
-        }
-
-        return null;
-    }
-
-    public String validationDLCConsole(DLCConsole dlcConsole){
-        return validationDLCConsoleSecret(dlcConsole);
-    }
-
-    private String validationDLCConsoleSecret(DLCConsole dlcConsole){
-
-        Date d = new Date();
-
-        if(dlcConsole.getName() == null || dlcConsole.getName().isEmpty()){
-            return "A DLC necessita de um nome";
-        }
-
-        if(dlcConsole.getReleaseDate() == null || d.compareTo(dlcConsole.getReleaseDate()) < 0){
-            return "Data invalida";
-        }
-
-        if(dlcConsole.getDescription() == null || dlcConsole.getDescription().isEmpty()){
-            return "A DLC necessita de uma descrição";
-        }
-
-        if(dlcConsole.getDeveloper() == null || dlcConsole.getDeveloper().isEmpty()){
-            return "A DLC necessita de um desenvolvedor";
-        }
-
-        if(dlcConsole.getPeopleInvolved() < 0){
-            return "Número de pessoas invalido";
-        }
-
-        if(dlcConsole.getSoldCopies() < 0){
-            return "Número de copias invalido";
-        }
-
-        if(dlcConsole.getDistributor() == null || dlcConsole.getDistributor().isEmpty()){
-            return "A DLC necessita de um Distribuidor";
-        }
-
-        if(dlcConsole.getScore() < 0 || dlcConsole.getScore() > 100){
-            return "Nota invalida";
-        }
-
-        if(dlcConsole.getPrice() < 0){
-            return "Preço invalido";
-        }
-
-        if(dlcConsole.getGenre() == null || dlcConsole.getGenre().isEmpty()){
-            return "A DLC necessita de um gênero";
-        }
-
-        if(dlcConsole.getRating() > 21 || dlcConsole.getRating() < 0){
-            return "Faixa etária invalida";
-        }
-
-        if(dlcConsole.getStorage() == null || dlcConsole.getStorage().isEmpty()){
-            return "A DLC precisa de um valor de armazenamento";
-        }
-
-        return null;
-
-    }
-
-    public void updateDLCPC(DlcPC dlc, Long id){
-
-        Optional<DlcPC> enty = repositoryDPC.findById(id);
 
         if(enty.isPresent()){
 
-            DlcPC entyUpdate = enty.get();
+            Dlc entyUpdate = enty.get();
 
-            entyUpdate.setOwnedGame(dlc.getOwnedGame());
             entyUpdate.setName(dlc.getName());
             entyUpdate.setReleaseDate(dlc.getReleaseDate());
             entyUpdate.setDescription(dlc.getDescription());
@@ -299,63 +247,26 @@ public class DLCService {
             entyUpdate.setPlatform(dlc.getPlatform());
             entyUpdate.setMinimumRequirements(dlc.getMinimumRequirements());
             entyUpdate.setRecommendedRequirements(dlc.getRecommendedRequirements());
-
-            repositoryDPC.save(entyUpdate);
-        }
-    }
-
-    public void updateDLCVR(DlcVR dlc, Long id){
-
-        Optional<DlcVR> enty = repositoryDVR.findById(id);
-
-        if(enty.isPresent()){
-
-            DlcVR entyUpdate = enty.get();
-
-            entyUpdate.setOwnedGame(dlc.getOwnedGame());
-            entyUpdate.setName(dlc.getName());
-            entyUpdate.setReleaseDate(dlc.getReleaseDate());
-            entyUpdate.setDescription(dlc.getDescription());
-            entyUpdate.setDeveloper(dlc.getDeveloper());
-            entyUpdate.setPeopleInvolved(dlc.getPeopleInvolved());
-            entyUpdate.setSoldCopies(dlc.getSoldCopies());
-            entyUpdate.setDistributor(dlc.getDistributor());
-            entyUpdate.setScore(dlc.getScore());
-            entyUpdate.setPrice(dlc.getPrice());
-            entyUpdate.setGenre(dlc.getGenre());
-            entyUpdate.setRating(dlc.getRating());
-            entyUpdate.setPlatform(dlc.getPlatform());
-            entyUpdate.setMinimumRequirements(dlc.getMinimumRequirements());
-            entyUpdate.setRecommendedRequirements(dlc.getRecommendedRequirements());
-
-            repositoryDVR.save(entyUpdate);
-        }
-    }
-
-    public void updateDLCConsole(DLCConsole dlc, Long id){
-
-        Optional<DLCConsole> enty = repositoryDConsole.findById(id);
-
-        if(enty.isPresent()){
-
-            DLCConsole entyUpdate = enty.get();
-
-            entyUpdate.setOwnedGame(dlc.getOwnedGame());
-            entyUpdate.setName(dlc.getName());
-            entyUpdate.setReleaseDate(dlc.getReleaseDate());
-            entyUpdate.setDescription(dlc.getDescription());
-            entyUpdate.setDeveloper(dlc.getDeveloper());
-            entyUpdate.setPeopleInvolved(dlc.getPeopleInvolved());
-            entyUpdate.setSoldCopies(dlc.getSoldCopies());
-            entyUpdate.setDistributor(dlc.getDistributor());
-            entyUpdate.setScore(dlc.getScore());
-            entyUpdate.setPrice(dlc.getPrice());
-            entyUpdate.setGenre(dlc.getGenre());
-            entyUpdate.setRating(dlc.getRating());
-            entyUpdate.setPlatform(dlc.getPlatform());
             entyUpdate.setStorage(dlc.getStorage());
 
-            repositoryDConsole.save(entyUpdate);
+            dlcRepository.save(entyUpdate);
+
+            return "Os dados foram atualizados com sucesso";
+        }else{
+            return "DLC não existente";
         }
     }
+
+    public String delete(Long id){
+
+        if(dlcRepository.existsById(id)){
+
+            dlcRepository.deleteById(id);
+
+            return "DLC deletada com sucesso";
+        }else{
+            return "DLC não existente";
+        }
+    }
+
 }

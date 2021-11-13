@@ -1,45 +1,19 @@
 package com.jogos.api.dto;
 
-import com.jogos.api.model.NeutralDLC;
-
 import java.util.Date;
 
-public class DLCConsoleDTO {
+public abstract class NeutralDDTO {
 
-    private String ownedGame;
-    private String name;
-    private Date releaseDate;
-    private String description;
-    private String developer;
-    private String distributor;
-    private int score;
-    private Double price;
-    private String genre;
-    private int rating;
-    private String platform;
-    private String storage;
-
-    public DLCConsoleDTO(NeutralDLC enty) {
-        this.ownedGame = enty.getOwnedGame();
-        this.name = enty.getName();
-        this.releaseDate = enty.getReleaseDate();
-        this.description = enty.getDescription();
-        this.developer = enty.getDeveloper();
-        this.distributor = enty.getDistributor();
-        this.score = enty.getScore();
-        this.price = enty.getPrice();
-        this.genre = enty.getGenre();
-        this.rating = enty.getRating();
-        this.platform = enty.getPlatform();
-    }
-
-    public String getOwnedGame() {
-        return ownedGame;
-    }
-
-    public void setOwnedGame(String ownedGame) {
-        this.ownedGame = ownedGame;
-    }
+    protected String name;
+    protected Date releaseDate;
+    protected String description;
+    protected String developer;
+    protected String distributor;
+    protected int score;
+    protected Double price;
+    protected String genre;
+    protected int rating;
+    protected String platform;
 
     public String getName() {
         return name;
@@ -119,13 +93,5 @@ public class DLCConsoleDTO {
 
     public void setPlatform(String platform) {
         this.platform = platform;
-    }
-
-    public String getStorage() {
-        return storage;
-    }
-
-    public void setStorage(String storage) {
-        this.storage = storage;
     }
 }

@@ -1,19 +1,18 @@
 package com.jogos.api.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "Game")
-public class Game {
+@Table(name = "DLC")
+public class Dlc {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "releaseDate", nullable = false)
@@ -46,15 +45,11 @@ public class Game {
     @Column(name = "rating", nullable = false)
     private int rating;
 
-    @Column(name = "hasDLC", nullable = false)
-    private boolean hasDLC;
-
     @Column(name = "platform", nullable = false)
     private String platform;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "dlc", referencedColumnName = "id")
-    private List<Dlc> dlc = new ArrayList<>();
+    @Column(name = "ownedGame", nullable = false)
+    private String ownedGame;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "minimumRequirements", referencedColumnName = "id")
@@ -67,12 +62,12 @@ public class Game {
     @Column(name = "storage")
     private String storage;
 
-    public Game() {
+    public Dlc() {
     }
 
-    public Game(String name, Date releaseDate, String description, String developer, int peopleInvolved, int soldCopies,
-                String distributor, int score, Double price, String genre, int rating, boolean hasDLC, String platform,
-                Requirements minimumRequirements, Requirements recommendedRequirements, String storage, List<Dlc> dlc) {
+    public Dlc(String name, Date releaseDate, String description, String developer, int peopleInvolved, int soldCopies,
+               String distributor, int score, Double price, String genre, int rating, String platform,
+               Requirements minimumRequirements, Requirements recommendedRequirements, String storage, String ownedGame) {
         this.name = name;
         this.releaseDate = releaseDate;
         this.description = description;
@@ -84,12 +79,11 @@ public class Game {
         this.price = price;
         this.genre = genre;
         this.rating = rating;
-        this.hasDLC = hasDLC;
         this.platform = platform;
         this.minimumRequirements = minimumRequirements;
         this.recommendedRequirements = recommendedRequirements;
         this.storage = storage;
-        this.dlc = dlc;
+        this.ownedGame = ownedGame;
     }
 
     public Long getId() {
@@ -188,14 +182,6 @@ public class Game {
         this.rating = rating;
     }
 
-    public boolean isHasDLC() {
-        return hasDLC;
-    }
-
-    public void setHasDLC(boolean hasDLC) {
-        this.hasDLC = hasDLC;
-    }
-
     public String getPlatform() {
         return platform;
     }
@@ -228,11 +214,11 @@ public class Game {
         this.storage = storage;
     }
 
-    public List<Dlc> getDlc() {
-        return dlc;
+    public String getOwnedGame() {
+        return ownedGame;
     }
 
-    public void setDlc(List<Dlc> dlc) {
-        this.dlc = dlc;
+    public void setOwnedGame(String ownedGame) {
+        this.ownedGame = ownedGame;
     }
 }
