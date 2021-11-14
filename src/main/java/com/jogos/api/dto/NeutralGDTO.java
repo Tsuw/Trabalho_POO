@@ -13,7 +13,6 @@ public abstract class NeutralGDTO {
     protected Double price;
     protected String genre;
     protected int rating;
-    protected boolean hasDLC;
     protected String platform;
 
     public String getName() {
@@ -86,14 +85,6 @@ public abstract class NeutralGDTO {
 
     public void setRating(int rating) {
         this.rating = rating;
-    }
-
-    public boolean isHasDLC() {
-        return hasDLC;
-    }
-
-    public void setHasDLC(boolean hasDLC) {
-        this.hasDLC = hasDLC;
     }
 
     public String getPlatform() {
